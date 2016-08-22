@@ -4,16 +4,21 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
-injectTapEventPlugin();
+import io from './helpers/ioClient';
+import NavBar from './components/NavBar/index';
+import CardBlock from './components/CardBlock/index';
 
-var WebApp = React.createClass({
+var App = React.createClass({
     render: function () {
         return (
             <MuiThemeProvider>
-            	Hello world!
+                <div>
+                    <NavBar />
+                    <CardBlock />
+                </div>
             </MuiThemeProvider>
         );
     }
 });
 
-ReactDOM.render(<WebApp />, document.getElementById('mybody'));
+ReactDOM.render(<App />, document.getElementById('root'));
