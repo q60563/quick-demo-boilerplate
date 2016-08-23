@@ -3,7 +3,7 @@ import GridLayout from 'react-grid-layout';
 import {WidthProvider} from 'react-grid-layout';
 
 import {Light, Buzzer, Flame, Pir, Switch, Temperature, 
-        Humidity, Illuminance , Weather} from '../Card/index';
+        Humidity, Illuminance , Weather} from '../Card/Card';
 
 var ReactGridLayout = WidthProvider(GridLayout);
 

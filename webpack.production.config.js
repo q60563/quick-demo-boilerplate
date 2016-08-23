@@ -45,6 +45,9 @@ module.exports = {
             modules: false
         }),
         new webpack.DefinePlugin({
+            'global.GENTLY': false
+        }),
+        new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         })
     ],
@@ -59,7 +62,7 @@ module.exports = {
             }
         }, {
             test: /\.json?$/,
-            loader: 'json'
+            loader: 'json-loader'
         }, {
             test: /\.css$/,
             loader: ExtractTextPlugin.extract('style', 'css?modules&localIdentName=[name]__[local]-[hash:base64:5]!postcss'),
@@ -72,5 +75,13 @@ module.exports = {
 
     postcss: [
         require('autoprefixer')
-    ]
+    ],
+
+    node: {
+        __dirname: true,
+        console: true,
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty'
+    }
 };

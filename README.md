@@ -18,11 +18,14 @@ $ cd quick-demo-boilerplate
 │   ├── /components/             # Generic UI components
 │   │   ├── /CardBlock/          # CardBlock component
 │   │   ├── /NavBar/             # NavBar component
-│   │   ├── /WeatherCard/        # WeatherCard component
-│   │   └── /...                 # etc.
+│   │   └── /Card/               # Card component
+│	│       ├── /Card.js         # export all of the Card components
+│	│       ├── /Buzzer.js       # Buzzer Card component
+│	│       ├── /Flame.js        # Flame Card component
+│	│       └── /...             # etc.
 │   ├── /helpers/                # helper classes
 │   ├── /static/                 # Static files such as favicon.ico etc.
-│   ├── /styles/                 # Application state manager (Redux)
+│   ├── /styles/                 # CSS styles
 │   ├── /client.js               # React application entry point
 │   ├── /index.tpl.html          # Webpack HtmlWebpackPlugin template
 │   └── /server.js               # server side application

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import request from 'request';
+// import request from 'superagent';
 
 import IoClient from './helpers/IoClient';
 import NavBar from './components/NavBar/NavBar';
@@ -16,7 +16,7 @@ function getWeather() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(seachWeather);
     } else {
-        
+
     }
 }
 
@@ -25,16 +25,17 @@ function seachWeather(position) {
               position.coords.latitude + '&lon=' + position.coords.longitude + 
               '&appid=ca57f9dc62e223f3f10d001470edd6cc';
 console.log(url);
-    request(url, function (err, rsp, body) {
-        if (err) {
-            console.log(err);
-        }
+    // request.get(url).end(function (err, rsp) {
+    //     if (err) {
+    //         console.log(err);
+    //     }
 
-        console.log(body);
-    });
+    //     console.log(rsp);
+    // });
 }
 
 getWeather();
+
 /*********************************************/
 /* client app                                */
 /*********************************************/

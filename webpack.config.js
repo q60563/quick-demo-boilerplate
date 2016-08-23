@@ -39,6 +39,9 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
+            'global.GENTLY': false
+        }),
+        new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('development')
         })
     ],
@@ -53,7 +56,7 @@ module.exports = {
             }
         }, {
             test: /\.json?$/,
-            loader: 'json'
+            loader: 'json-loader'
         }, {
             test: /\.css$/,
             loader: 'style!css?modules&localIdentName=[name]__[local]-[hash:base64:5]',
@@ -62,5 +65,13 @@ module.exports = {
             test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
             loader: 'url-loader?limit=10000'
         }]
+    },
+
+    node: {
+        __dirname: true,
+        console: true,
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty'
     }
 };

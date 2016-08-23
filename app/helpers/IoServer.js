@@ -16,4 +16,8 @@ IoServer.prototype.sendInd = function (cmd, data) {
     console('***sendInd*** ' + cmd + ' , data: ' + data);
 };
 
+IoServer.prototype.regReqHdlr = function (cmd, handler) {
+    console('***regReqHdlr*** ' + cmd);
+};
+
 module.exports = IoServer;
