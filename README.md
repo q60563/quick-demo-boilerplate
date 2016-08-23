@@ -19,10 +19,10 @@ $ cd quick-demo-boilerplate
 │   │   ├── /CardBlock/          # CardBlock component
 │   │   ├── /NavBar/             # NavBar component
 │   │   └── /Card/               # Card component
-│	│       ├── /Card.js         # export all of the Card components
-│	│       ├── /Buzzer.js       # Buzzer Card component
-│	│       ├── /Flame.js        # Flame Card component
-│	│       └── /...             # etc.
+│	  │       ├── /Card.js         # export all of the Card components
+│	  │       ├── /Buzzer.js       # Buzzer Card component
+│   │       ├── /Flame.js        # Flame Card component
+│   │       └── /...             # etc.
 │   ├── /helpers/                # helper classes
 │   ├── /static/                 # Static files such as favicon.ico etc.
 │   ├── /styles/                 # CSS styles
