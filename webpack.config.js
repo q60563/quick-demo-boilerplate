@@ -4,16 +4,27 @@ var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
+var PATHS = {
+    main: path.join(__dirname, 'app', 'client.js'),         // app folder: source code
+    build: path.join(__dirname, 'build'),                   // build folder: bundle code
+    style: [
+        path.join(__dirname, 'app', 'styles', 'main.css')
+    ]
+};
+
 module.exports = {
     devtool: 'eval-source-map',
 
-    entry: [
-        'webpack-hot-middleware/client?reload=true',
-        path.join(__dirname, 'app/client.js')
-    ],
+    entry: {
+        main: [
+            'webpack-hot-middleware/client?reload=true',
+            PATHS.main
+        ],
+        style: PATHS.style
+    },
 
     output: {
-        path: path.join(__dirname, '/build/'),
+        path: PATHS.build,
         filename: '[name].js',
         publicPath: '/'
     },
@@ -45,7 +56,11 @@ module.exports = {
             loader: 'json'
         }, {
             test: /\.css$/,
-            loader: 'style!css?modules&localIdentName=[name]---[local]---[hash:base64:5]'
+            loader: 'style!css?modules&localIdentName=[name]__[local]-[hash:base64:5]',
+            include: PATHS.style
+        }, {
+            test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
+            loader: 'url-loader?limit=10000'
         }]
     }
 };

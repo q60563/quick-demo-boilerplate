@@ -6,13 +6,22 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var StatsPlugin = require('stats-webpack-plugin');
 
+var PATHS = {
+    main: path.join(__dirname, 'app', 'client.js'),         // app folder: source code
+    build: path.join(__dirname, 'build'),                   // build folder: bundle code
+    style: [
+        path.join(__dirname, 'app', 'styles', 'main.css')
+    ]
+};
+
 module.exports = {
-    entry: [
-        path.join(__dirname, 'app/client.js')
-    ],
+    entry: {
+        main: PATHS.main,
+        style: PATHS.style
+    },
     
     output: {
-        path: path.join(__dirname, '/build/'),
+        path: PATHS.build,
         filename: '[name]-[hash].min.js',
         publicPath: '/'
     },
@@ -53,7 +62,11 @@ module.exports = {
             loader: 'json'
         }, {
             test: /\.css$/,
-            loader: ExtractTextPlugin.extract('style', 'css?modules&localIdentName=[name]---[local]---[hash:base64:5]!postcss')
+            loader: ExtractTextPlugin.extract('style', 'css?modules&localIdentName=[name]__[local]-[hash:base64:5]!postcss'),
+            include: PATHS.style
+        }, {
+            test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
+            loader: 'url-loader?limit=10000'
         }]
     },
 

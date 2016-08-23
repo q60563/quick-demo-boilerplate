@@ -6,9 +6,9 @@ var app = express(),
 	server = http.createServer(app),
 	io = new Io(server);
 
-function IoServer () {};
+function IoServer () {}
 
-IoServer.prototype.start = function () {
+IoServer.prototype.start = function (callback) {
 	server.listen(3001);
 };
 
