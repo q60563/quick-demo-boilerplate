@@ -13,11 +13,13 @@ IoServer.prototype.start = function (callback) {
 };
 
 IoServer.prototype.sendInd = function (cmd, data) {
-    console('***sendInd*** ' + cmd + ' , data: ' + data);
+    console.log('***sendInd*** ' + cmd + ' , data: ' + data);
 };
 
 IoServer.prototype.regReqHdlr = function (cmd, handler) {
-    console('***regReqHdlr*** ' + cmd);
+    console.log('***regReqHdlr*** ' + cmd);
 };
 
-module.exports = IoServer;
+var ioServer = new IoServer();
+
+module.exports = ioServer;

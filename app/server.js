@@ -1,8 +1,6 @@
 var chalk = require('chalk');
 
-var IoServer = require('./helpers/IoServer');
-
-var ioServer = new IoServer();
+var ioServer = require('./helpers/ioServer');
 
 /************************/
 /* Event handle         */

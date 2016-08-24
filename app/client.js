@@ -1,11 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // import request from 'superagent';
 
-import IoClient from './helpers/IoClient';
+import reducer from './redux/reducer';
+import ioClient from './helpers/ioClient';
 import NavBar from './components/NavBar/NavBar';
 import CardBlock from './components/CardBlock/CardBlock';
 
@@ -34,15 +37,13 @@ console.log(url);
     // });
 }
 
-getWeather();
+// getWeather();
 
 /*********************************************/
 /* client app                                */
 /*********************************************/
-var title = 'coap-shepherd',
-    timeLeft = 0,
-    devs = {},
-    ioClient = new IoClient();
+var store = createStore(reducer),
+    title = 'coap-shepherd';
 
 ioClient.start();
 ioClient.on('ind', function (msg) {
@@ -79,22 +80,17 @@ var App = React.createClass({
         return (
             <MuiThemeProvider>
                 <div>
-                    <NavBar title={this.props.title} timeLeft={this.props.timeLeft} ioClient={this.props.ioClient} />
-                    <CardBlock devs={this.props.devs} ioClient={this.props.ioClient} />
-                </div>
+                    <NavBar title={this.props.title} />
+                    <CardBlock />
+                </div>     
             </MuiThemeProvider>
         );
     }
 });
 
-function render() {
-    ReactDOM.render(
-        <App 
-            title={title} 
-            timeLeft={timeLeft} 
-            devs={devs} 
-            ioClient={ioClient} />, 
-        document.getElementById('root'));
-}
-
-render();
+ReactDOM.render(
+    <Provider store={store}>
+        <App title={title} />
+    </Provider>, 
+    document.getElementById('root')
+);

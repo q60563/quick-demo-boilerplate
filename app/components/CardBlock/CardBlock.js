@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
 import GridLayout from 'react-grid-layout';
 import {WidthProvider} from 'react-grid-layout';
+
+import {getDevs, updateDevs} from '../../redux/cardBlock';
 
 import {Light, Buzzer, Flame, Pir, Switch, Temperature, 
         Humidity, Illuminance , Weather} from '../Card/Card';
@@ -8,6 +11,12 @@ import {Light, Buzzer, Flame, Pir, Switch, Temperature,
 var ReactGridLayout = WidthProvider(GridLayout);
 
 var CardBlock = React.createClass({
+    propTypes: {
+        getDevs: PropTypes.func.isRequired
+    },
+    handleClick: function () {
+        this.props.getDevs();
+    },
     render: function () {
         var layout = [
             {i: 'SmallCard1',  x: 5, y: 2, w: 1, h: 2},
@@ -20,9 +29,10 @@ var CardBlock = React.createClass({
             {i: 'BigCard3',    x: 3, y: 2, w: 2, h: 2},
             {i: 'WeatherCard', x: 6, y: 0, w: 2, h: 4}
         ];
-
+console.log(this.props.devs);
         return (
             <div>
+                <button onClick={this.handleClick}>get</button>
                 <ReactGridLayout layout={layout} rowHeight={60} >
                     <div key="SmallCard1">
                         <Light />
@@ -65,5 +75,13 @@ var CardBlock = React.createClass({
     }
 });
 
+function select(state) {
+    return { 
+        devs: state.cardBlock.devs 
+    };
+}
 
-module.exports = CardBlock;
+export default connect(
+    select, 
+    {getDevs, updateDevs}
+)(CardBlock)
