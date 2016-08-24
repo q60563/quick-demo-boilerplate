@@ -2,6 +2,7 @@ import ioClient from '../helpers/ioClient';
 
 // Actions
 const GETDEVS = 'app/cardBlock/GETDEVS';
+const WRITE = 'app/cardBlock/WRITE';
 const UPDATEDEVS = 'app/cardBlock/UPDATEDEVS';
 
 const initialState = {
@@ -12,16 +13,18 @@ const initialState = {
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         case GETDEVS:
-            ioClient.sendReq('getDevs', {}, function (status, data) {
-                if (status === 1)
-                    updateDevs(data);
-            });
+            return {
+                ...state,
+                devs: action.data
+            };
+
+        case WRITE:
             return state;
 
         case UPDATEDEVS:
             return {
                 ...state,
-                devs: action.devs
+                devs: action.data
             };
 
         default:
@@ -34,8 +37,11 @@ export function getDevs() {
     return { type: GETDEVS };
 }
 
+export function write(permAddr, auxId, value) {
+    return { type: WRITE, permAddr: permAddr, auxId: auxId, value: value };
+}
+
 export function updateDevs(devs) {
-console.log('updateDevs');
     return { type: UPDATEDEVS, devs: devs };
 }
 

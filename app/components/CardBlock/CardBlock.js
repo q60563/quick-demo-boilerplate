@@ -11,11 +11,12 @@ import {Light, Buzzer, Flame, Pir, Switch, Temperature,
 var ReactGridLayout = WidthProvider(GridLayout);
 
 var CardBlock = React.createClass({
+    getInitialState: function () {
+        this.props.getDevs();
+        return {};
+    },
     propTypes: {
         getDevs: PropTypes.func.isRequired
-    },
-    handleClick: function () {
-        this.props.getDevs();
     },
     render: function () {
         var layout = [
@@ -29,10 +30,9 @@ var CardBlock = React.createClass({
             {i: 'BigCard3',    x: 3, y: 2, w: 2, h: 2},
             {i: 'WeatherCard', x: 6, y: 0, w: 2, h: 4}
         ];
-console.log(this.props.devs);
+        
         return (
             <div>
-                <button onClick={this.handleClick}>get</button>
                 <ReactGridLayout layout={layout} rowHeight={60} >
                     <div key="SmallCard1">
                         <Light />
@@ -83,5 +83,5 @@ function select(state) {
 
 export default connect(
     select, 
-    {getDevs, updateDevs}
+    {getDevs}
 )(CardBlock)

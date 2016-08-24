@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -8,6 +8,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 // import request from 'superagent';
 
 import reducer from './redux/reducer';
+import clientMiddleware from './redux/clientMiddleware';
 import ioClient from './helpers/ioClient';
 import NavBar from './components/NavBar/NavBar';
 import CardBlock from './components/CardBlock/CardBlock';
@@ -42,7 +43,7 @@ console.log(url);
 /*********************************************/
 /* client app                                */
 /*********************************************/
-var store = createStore(reducer),
+var store = createStore(reducer, applyMiddleware(clientMiddleware)),
     title = 'coap-shepherd';
 
 ioClient.start();
@@ -52,19 +53,15 @@ ioClient.on('ind', function (msg) {
 
             break;
         case 'permitJoining':  // msg.data = { timeLeft }
-            timeLeft = msg.data.timeLeft;  
             render();
             break;
         case 'devIncoming':    // msg.data = devInfo
-            devs[msg.data.permAddr] = msg.data;  
             render();   
             break;
         case 'devStatus':      // msg.data = { permAddr, status }
-            devs[msg.data.permAddr].status = msg.data.status;  
             render();
             break;
-        case 'attrsChange':    // msg.data = gadInfo
-            devs[msg.data.permAddr].gads[msg.data.auxId] = msg.data;   
+        case 'attrsChange':    // msg.data = gadInfo 
             render();
             break;
         case 'toast':
