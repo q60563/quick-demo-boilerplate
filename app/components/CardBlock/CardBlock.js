@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import GridLayout from 'react-grid-layout';
 import {WidthProvider} from 'react-grid-layout';
 
-import {getDevs, updateDevs} from '../../redux/cardBlock';
+import {getDevs, write} from '../../redux/modules/cardBlock';
 
 import {Light, Buzzer, Flame, Pir, Switch, Temperature, 
         Humidity, Illuminance , Weather} from '../Card/Card';
@@ -11,12 +11,11 @@ import {Light, Buzzer, Flame, Pir, Switch, Temperature,
 var ReactGridLayout = WidthProvider(GridLayout);
 
 var CardBlock = React.createClass({
-    getInitialState: function () {
-        this.props.getDevs();
-        return {};
-    },
     propTypes: {
         getDevs: PropTypes.func.isRequired
+    },
+    componentDidMount: function () {
+        this.props.getDevs();
     },
     render: function () {
         var layout = [
@@ -33,7 +32,7 @@ var CardBlock = React.createClass({
         
         return (
             <div>
-                <ReactGridLayout layout={layout} rowHeight={60} >
+                <ReactGridLayout layout={layout} rowHeight={60} isDraggable={false}>
                     <div key="SmallCard1">
                         <Light />
                     </div>
@@ -75,13 +74,13 @@ var CardBlock = React.createClass({
     }
 });
 
-function select(state) {
+function mapStateToProps (state) {
     return { 
         devs: state.cardBlock.devs 
     };
 }
 
 export default connect(
-    select, 
+    mapStateToProps , 
     {getDevs}
 )(CardBlock)

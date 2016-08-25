@@ -16,6 +16,8 @@ IoClient.prototype.sendReq = function (cmd, args, callback) {
 
     if (cmd === 'getDevs')
     	callback(1, { 'AA:BB:CC': { permAddr: 'AA:BB:CC' }, 'AA:BB:DD': { permAddr: 'AA:BB:DD' } });
+    else
+    	callback();
 };
 
 var ioClient = new IoClient();

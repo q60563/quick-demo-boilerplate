@@ -5,40 +5,14 @@ import { Provider } from 'react-redux';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-// import request from 'superagent';
 
+import ioClient from './helpers/ioClient';
 import reducer from './redux/reducer';
 import clientMiddleware from './redux/clientMiddleware';
-import ioClient from './helpers/ioClient';
+import {devIncoming, devStatus, attrsChange} from './redux/modules/cardBlock';
+import {permitJoining} from './redux/modules/navBar';
 import NavBar from './components/NavBar/NavBar';
 import CardBlock from './components/CardBlock/CardBlock';
-
-/*********************************************/
-/* get weather info                          */
-/*********************************************/
-function getWeather() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(seachWeather);
-    } else {
-
-    }
-}
-
-function seachWeather(position) {
-    var url = 'http://api.openweathermap.org/data/2.5/weather?lat=' + 
-              position.coords.latitude + '&lon=' + position.coords.longitude + 
-              '&appid=ca57f9dc62e223f3f10d001470edd6cc';
-console.log(url);
-    // request.get(url).end(function (err, rsp) {
-    //     if (err) {
-    //         console.log(err);
-    //     }
-
-    //     console.log(rsp);
-    // });
-}
-
-// getWeather();
 
 /*********************************************/
 /* client app                                */
@@ -53,16 +27,16 @@ ioClient.on('ind', function (msg) {
 
             break;
         case 'permitJoining':  // msg.data = { timeLeft }
-            render();
+            store.dispatch(permitJoining(msg.data.timeLeft));
             break;
         case 'devIncoming':    // msg.data = devInfo
-            render();   
+            store.dispatch(devIncoming(msg.data));  
             break;
         case 'devStatus':      // msg.data = { permAddr, status }
-            render();
+            store.dispatch(devStatus(msg.data.permAddr, msg.data.status));
             break;
         case 'attrsChange':    // msg.data = gadInfo 
-            render();
+            store.dispatch(attrsChange(msg.data));
             break;
         case 'toast':
 
@@ -72,6 +46,9 @@ ioClient.on('ind', function (msg) {
     }
 });
 
+/*********************************************/
+/* App component                             */
+/*********************************************/
 var App = React.createClass({
     render: function () {
         return (
@@ -85,6 +62,9 @@ var App = React.createClass({
     }
 });
 
+/*********************************************/
+/* render                                    */
+/*********************************************/
 ReactDOM.render(
     <Provider store={store}>
         <App title={title} />
