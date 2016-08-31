@@ -7,12 +7,16 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import ioClient from './helpers/ioClient';
+
 import reducer from './redux/reducer';
 import clientMiddleware from './redux/clientMiddleware';
-import {devIncoming, devStatus, attrsChange} from './redux/modules/cardBlock';
 import {permitJoining} from './redux/modules/navBar';
+import {devIncoming, devStatus, attrsChange} from './redux/modules/cardBlock';
+import {notice, requestClose} from './redux/modules/navBar';
+
 import NavBar from './components/NavBar/NavBar';
 import CardBlock from './components/CardBlock/CardBlock';
+import NoticeBar from './components/NoticeBar/NoticeBar';
 
 /*********************************************/
 /* client app                                */
@@ -38,8 +42,8 @@ ioClient.on('ind', function (msg) {
         case 'attrsChange':    // msg.data = gadInfo 
             store.dispatch(attrsChange(msg.data));
             break;
-        case 'toast':
-
+        case 'toast':          // msg.data = { msg }
+            store.dispatch(notice(true, msg.data.msg));
             break;
         default:
             break;
@@ -56,6 +60,7 @@ var App = React.createClass({
                 <div>
                     <NavBar title={this.props.title} />
                     <CardBlock />
+                    <NoticeBar />
                 </div>     
             </MuiThemeProvider>
         );
