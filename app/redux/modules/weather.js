@@ -2,7 +2,10 @@
 const GETWEATHER = 'app/weather/GETWEATHER';
 
 const initialState = {
-        info: {} 
+        info: {
+            weather: [{}],
+            main: {}
+        } 
     };
 
 // Reducer

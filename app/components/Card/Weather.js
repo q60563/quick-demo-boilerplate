@@ -11,7 +11,6 @@ var WeatherCard = React.createClass({
         this.props.getWeather('25.071988', '121.578406');
     },
     render: function () {
-        console.log(this.props.weather);
         return (
             <div style={{width: '100%', height: '100%', backgroundColor: '#03A9F4'}}>
                 <div style={{float: 'left', width: '50%', color: 'white', padding: '10% 2.5%'}}>
