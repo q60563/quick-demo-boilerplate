@@ -21,11 +21,11 @@ var BuzzerCard = React.createClass({
 
 function mapStateToProps (state) {
     return { 
-        devs: state.cardBlock.devs 
+        devs: state.cardBlock.devs
     };
 }
 
 export default connect(
-    mapStateToProps , 
+    mapStateToProps, 
     {write}
 )(BuzzerCard)

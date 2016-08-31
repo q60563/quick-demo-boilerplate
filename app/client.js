@@ -39,8 +39,8 @@ ioClient.on('ind', function (msg) {
         case 'devStatus':      // msg.data = { permAddr, status }
             store.dispatch(devStatus(msg.data.permAddr, msg.data.status));
             break;
-        case 'attrsChange':    // msg.data = gadInfo 
-            store.dispatch(attrsChange(msg.data));
+        case 'attrsChange':    // msg.data = { permAddr, gadInfo } 
+            store.dispatch(attrsChange(msg.data.permAddr, msg.data.gad));
             break;
         case 'toast':          // msg.data = { msg }
             store.dispatch(notice(true, msg.data.msg));
@@ -54,6 +54,34 @@ ioClient.on('ind', function (msg) {
 /* App component                             */
 /*********************************************/
 var App = React.createClass({
+    componentDidMount : function () {
+        setTimeout(function () {
+            console.log('test');
+            store.dispatch(devIncoming({
+                permAddr: 'AA:BB:CC:DD:EE',
+                status: 'online',
+                gads: { 
+                    'temp/0': {
+                        type: 'temp',
+                        auxId: 'temp/0',
+                        value: '20'
+                    }
+                }
+            }));
+        }, 3000);
+
+        setTimeout(function () {
+            store.dispatch(devStatus('AA:BB:CC:DD:EE', 'offline'));
+        }, 5000);
+
+        setTimeout(function () {
+            store.dispatch(attrsChange('AA:BB:CC:DD:EE', {
+                type: 'temp',
+                auxId: 'temp/0',
+                value: '28'
+            }));
+        }, 7000);
+    },
     render: function () {
         return (
             <MuiThemeProvider>

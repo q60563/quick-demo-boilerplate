@@ -29,7 +29,9 @@ var CardBlock = React.createClass({
             {i: 'BigCard3',    x: 3, y: 2, w: 2, h: 2},
             {i: 'WeatherCard', x: 6, y: 0, w: 2, h: 4}
         ];
-        
+
+        console.log(this.props.devs);
+
         return (
             <div>
                 <ReactGridLayout layout={layout} rowHeight={60} isDraggable={false}>
