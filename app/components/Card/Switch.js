@@ -2,17 +2,21 @@ import React from 'react';
 import SwitchOnIcon from '../Icons/SwitchOnIcon'
 import SwitchOffIcon from '../Icons/SwitchOffIcon'
 
+var bgColor = '#5CB85C',
+    fgColorOn = "#FFF",
+    fgColorOff = "#FFF";
+
 var SwitchCard = React.createClass({
     getDefaultProps: function () {
         return {
-            onOff: false
+            onOff: true
         }
     },
     render: function () {
+        var icon = !!this.props.onOff ? (<SwitchOnIcon fill={fgColorOn} />) : (<SwitchOffIcon fill={fgColorOff} />);
         return (
-            <div style={{width: '100%', height: '100%', backgroundColor: '#FFD382'}}>
-                {this.props.onOff ? <SwitchOnIcon fill="#FF7C80" /> : <SwitchOffIcon fill="#FF7C80" /> }
-                SwitchCard
+            <div style={{width: '100%', height: '100%', backgroundColor: bgColor}}>
+                {icon}
             </div>
         );
     }

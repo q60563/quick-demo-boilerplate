@@ -5,6 +5,8 @@ import BuzzerOffIcon from '../Icons/BuzzerOffIcon'
 import {connect} from 'react-redux';
 import {write} from '../../redux/modules/cardBlock';
 
+var bgColor = '#357FBD';
+
 var BuzzerCard = React.createClass({
     propTypes: {
         write: PropTypes.func.isRequired
@@ -19,7 +21,7 @@ var BuzzerCard = React.createClass({
     },
     render: function () {
         return (
-            <div style={{width: '100%', height: '100%', backgroundColor: '#FFD382'}}>
+            <div style={{width: '100%', height: '100%', backgroundColor: bgColor }}>
                 {this.props.onOff ? <BuzzerOnIcon fill="#FF7C80" /> : <BuzzerOffIcon fill="#FF7C80" /> }
             </div>
         );

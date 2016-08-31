@@ -1,6 +1,12 @@
 import React from 'react';
 import FireIcon from '../Icons/FireIcon'
 
+var csshake = require('../../styles/csshake.css');
+
+var bgColor = '#F89D24',
+    fgColorOn = "#FFF",
+    fgColorOff = "#5D4037";
+
 var FlameCard = React.createClass({
     getDefaultProps: function () {
         return {
@@ -9,9 +15,8 @@ var FlameCard = React.createClass({
     },
     render: function () {
         return (
-            <div style={{width: '100%', height: '100%', backgroundColor: '#FFD382'}}>
+            <div className={csshake['shake-opacity'] + ' ' + csshake['shake-constant'] + ' ' + csshake['shake-constant--hover']} style={{width: '100%', height: '100%', backgroundColor: bgColor}}>
                 <FireIcon fill="#FF7C80" />
-                FlameCard
             </div>
         );
     }

@@ -11,7 +11,7 @@ var PATHS = {
     build: path.join(__dirname, 'build'),                   // build folder: bundle code
     style: [
         path.join(__dirname, 'app', 'styles', 'main.css'),
-        path.join(__dirname, 'app', 'styles', 'animate.css')
+        path.join(__dirname, 'app', 'styles', 'csshake.css')
     ]
 };
 

@@ -2,9 +2,10 @@ import React from 'react';
 import PirWatchIcon from '../Icons/PirWatchIcon'
 import PirTriggeredIcon from '../Icons/PirTriggeredIcon'
 
-var animate = require('../../styles/animate.css');
-console.log('XXXXXXXXXXXXXXXX');
-console.log(animate);
+var csshake = require('../../styles/csshake.css');
+
+var bgColor = '#F4D830';
+
 var PirCard = React.createClass({
     getDefaultProps: function () {
         return {
@@ -13,9 +14,8 @@ var PirCard = React.createClass({
     },
     render: function () {
         return (
-            <div className={animate.animated + ' ' + animate.shake} style={{width: '100%', height: '100%', backgroundColor: '#FFD382'}}>
+            <div className={csshake['shake-rotate'] + ' ' + csshake['shake-constant'] + ' ' + csshake['shake-constant--hover']} style={{width: '100%', height: '100%', backgroundColor: bgColor}}>
                 {this.props.triggered ? <PirTriggeredIcon fill="#FF7C80" /> : <PirWatchIcon fill="#FF7C80" /> }
-                PirCard
             </div>
         );
     }
