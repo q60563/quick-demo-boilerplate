@@ -38,19 +38,19 @@ var CardBlock = React.createClass({
                     </div>
 
                     <div key="SmallCard2">
-                        <Buzzer />
+                        <Buzzer onOff="true" />
                     </div>
 
                     <div key="SmallCard3">
-                        <Flame />
+                        <Flame triggered="false"/>
                     </div>
 
                     <div key="SmallCard4">
-                        <Pir />
+                        <Pir triggered="true" />
                     </div>
 
                     <div key="SmallCard5">
-                        <Switch />
+                        <Switch onOff="true" />
                     </div>
                     
                     <div key="BigCard1">
