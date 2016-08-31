@@ -39,8 +39,8 @@ ioClient.on('ind', function (msg) {
         case 'devStatus':      // msg.data = { permAddr, status }
             store.dispatch(devStatus(msg.data.permAddr, msg.data.status));
             break;
-        case 'attrsChange':    // msg.data = gadInfo 
-            store.dispatch(attrsChange(msg.data));
+        case 'attrsChange':    // msg.data = { permAddr, gadInfo } 
+            store.dispatch(attrsChange(msg.data.permAddr, msg.data.gad));
             break;
         case 'toast':          // msg.data = { msg }
             store.dispatch(notice(true, msg.data.msg));
@@ -54,6 +54,79 @@ ioClient.on('ind', function (msg) {
 /* App component                             */
 /*********************************************/
 var App = React.createClass({
+    componentDidMount : function () {
+        setTimeout(function () {
+            console.log('test');
+            store.dispatch(devIncoming({
+                permAddr: 'AA:BB:CC:DD:EE',
+                status: 'online',
+                gads: { 
+                    'temp/0': {
+                        type: 'Temperature',
+                        auxId: 'temp/0',
+                        value: '20'
+                    },
+                    'hum/0': {
+                        type: 'Humidity',
+                        auxId: 'hum/0',
+                        value: '56'
+                    },
+                    'light/0': {
+                        type: 'Light',
+                        auxId: 'light/0',
+                        value: 'off'
+                    },
+                    'buzzer/0': {
+                        type: 'Buzzer',
+                        auxId: 'buzzer/0',
+                        value: 'on'
+                    }
+                }
+            }));
+        }, 3000);
+
+        setTimeout(function () {
+            store.dispatch(devIncoming({
+                permAddr: 'AA:BB:CC:DD:FF',
+                status: 'online',
+                gads: { 
+                    'illu/0': {
+                        type: 'Illuminance',
+                        auxId: 'illu/0',
+                        value: '108'
+                    },
+                    'flame/0': {
+                        type: 'Flame',
+                        auxId: 'flame/0',
+                        value: 'off'
+                    },
+                    'pir/0': {
+                        type: 'Pir',
+                        auxId: 'pir/0',
+                        value: 'off'
+                    },
+                    'switch/0': {
+                        type: 'Switch',
+                        auxId: 'switch/0',
+                        value: 'on'
+                    }
+                }
+            }));
+        }, 4000);
+
+        // setTimeout(function () {
+        //     store.dispatch(devStatus('AA:BB:CC:DD:EE', 'offline'));
+        // }, 5000);
+
+        // setTimeout(function () {
+        //     store.dispatch(attrsChange('AA:BB:CC:DD:EE', {
+        //         type: 'Temperature',
+        //         auxId: 'temp/0',
+        //         value: '28'
+        //     }));
+        // }, 7000);
+    },
+
     render: function () {
         return (
             <MuiThemeProvider>

@@ -1,5 +1,3 @@
-import ioClient from '../../helpers/ioClient';
-
 // Actions
 const GETDEVS = 'app/cardBlock/GETDEVS';
 const WRITE = 'app/cardBlock/WRITE';
@@ -24,13 +22,40 @@ export default function reducer(state = initialState, action) {
             return state;
 
         case DEVINCOMING:
-            return state;
+            return {
+                ...state,
+                devs: {
+                    ...state.devs,
+                    [action.dev.permAddr]: action.dev
+                }
+            };
 
         case DEVSTATUS:
-            return state;
+            return {
+                ...state,
+                devs: {
+                    ...state.devs,
+                    [action.permAddr]: {
+                        ...state.devs[action.permAddr],
+                        status: action.status
+                    }
+                }
+            };
 
         case ATTRSCHANGE:
-            return state;
+            return {
+                ...state,
+                devs: {
+                    ...state.devs,
+                    [action.permAddr]: {
+                        ...state.devs[action.permAddr],
+                        gads: {
+                            ...state.devs[action.permAddr].gads,
+                            [action.gad.auxId]: action.gad
+                        }
+                    }
+                }
+            };
 
         default:
             return state;
@@ -51,10 +76,10 @@ export function devIncoming(dev) {
 }
 
 export function devStatus(permAddr, status) {
-    return { type: DEVINCOMING, permAddr: permAddr, status: status };
+    return { type: DEVSTATUS, permAddr: permAddr, status: status };
 }
 
-export function attrsChange(gad) {
-    return { type: DEVINCOMING, gad: gad };
+export function attrsChange(permAddr, gad) {
+    return { type: ATTRSCHANGE, permAddr: permAddr, gad: gad };
 }
 
