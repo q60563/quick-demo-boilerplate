@@ -56,7 +56,6 @@ ioClient.on('ind', function (msg) {
 var App = React.createClass({
     componentDidMount : function () {
         setTimeout(function () {
-            console.log('test');
             store.dispatch(devIncoming({
                 permAddr: 'AA:BB:CC:DD:EE',
                 status: 'online',
@@ -114,17 +113,17 @@ var App = React.createClass({
             }));
         }, 4000);
 
-        // setTimeout(function () {
-        //     store.dispatch(devStatus('AA:BB:CC:DD:EE', 'offline'));
-        // }, 5000);
+        setTimeout(function () {
+            store.dispatch(devStatus('AA:BB:CC:DD:EE', 'offline'));
+        }, 5000);
 
-        // setTimeout(function () {
-        //     store.dispatch(attrsChange('AA:BB:CC:DD:EE', {
-        //         type: 'Temperature',
-        //         auxId: 'temp/0',
-        //         value: '28'
-        //     }));
-        // }, 7000);
+        setTimeout(function () {
+            store.dispatch(attrsChange('AA:BB:CC:DD:EE', {
+                type: 'Temperature',
+                auxId: 'temp/0',
+                value: '28'
+            }));
+        }, 7000);
     },
 
     render: function () {
