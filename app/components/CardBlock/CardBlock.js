@@ -10,72 +10,145 @@ import {Light, Buzzer, Flame, Pir, Switch, Temperature,
 
 var ReactGridLayout = WidthProvider(GridLayout);
 
+var keyCounter,
+    layoutDataGrids;
+
 var CardBlock = React.createClass({
     propTypes: {
         getDevs: PropTypes.func.isRequired
     },
+    
     componentDidMount: function () {
         this.props.getDevs();
     },
-    render: function () {
-        var layout = [
-            {i: 'SmallCard1',  x: 5, y: 2, w: 1, h: 2},
-            {i: 'SmallCard2',  x: 6, y: 2, w: 1, h: 2},
-            {i: 'SmallCard3',  x: 5, y: 1, w: 1, h: 2},
-            {i: 'SmallCard4',  x: 4, y: 3, w: 1, h: 2},
-            {i: 'SmallCard5',  x: 6, y: 3, w: 1, h: 2},
-            {i: 'BigCard1',    x: 4, y: 0, w: 2, h: 2},
-            {i: 'BigCard2',    x: 3, y: 1, w: 2, h: 2},
-            {i: 'BigCard3',    x: 3, y: 2, w: 2, h: 2},
-            {i: 'WeatherCard', x: 6, y: 0, w: 2, h: 4}
-        ];
 
-        console.log(this.props.devs);
+    getKeyAndDataGrid: function (type) {
+        var cardProps = {
+            key: null,
+            dataGrid: null
+        };
+
+        switch (type) {
+            case 'Light':
+            case 'Buzzer':
+            case 'Flame':
+            case 'Pir':
+            case 'Switch':
+                cardProps.key = 'smallCard' + keyCounter.small;
+                keyCounter.small += 1;
+
+                if (layoutDataGrids.smallCard.length > 0) 
+                    cardProps.dataGrid = layoutDataGrids.smallCard.splice(-(layoutDataGrids.smallCard.length), 1)[0];
+                else 
+                    cardProps.dataGrid = {x: 4, y: 4, w: 1, h: 2};
+                break;
+
+            case 'Temperature':
+            case 'Humidity':
+            case 'Illuminance':
+                cardProps.key = 'bigCard' + keyCounter.big;
+                keyCounter.big += 1;
+
+                if (layoutDataGrids.bigCard.length > 0) 
+                    cardProps.dataGrid = layoutDataGrids.bigCard.splice(-(layoutDataGrids.bigCard.length), 1)[0];
+                else 
+                    cardProps.dataGrid = {x: 4, y: 4, w: 2, h: 2};
+                break;
+
+            default:
+                break;
+        }
+
+        return cardProps;
+    },
+
+    getCard: function (type) {
+        var card,
+            cardProps = this.getKeyAndDataGrid(type);
+
+        switch (type) {
+            case 'Light':
+                card = (<Light />);
+                break;
+            case 'Buzzer':
+                card = (<Buzzer />);
+                break;
+            case 'Flame':
+                card = (<Flame />);
+                break;
+            case 'Pir':
+                card = (<Pir />);
+                break;
+            case 'Switch':
+                card = (<Switch />);
+                break;
+            case 'Temperature':
+                card = (<Temperature />);
+                break;
+            case 'Humidity':
+                card = (<Humidity />);
+                break;
+            case 'Illuminance':
+                card = (<Illuminance />);
+                break;
+            default:
+                break;
+        }
+
+        return (
+            <div key={cardProps.key} data-grid={cardProps.dataGrid}>
+                {card}
+            </div>
+        );
+    },
+
+    render: function () {
+        var allGadRender = [];
+
+        keyCounter = {
+            small: 0,
+            big: 0
+        };
+
+        layoutDataGrids = {
+            smallCard: [
+                {x: 5, y: 2, w: 1, h: 2},
+                {x: 6, y: 2, w: 1, h: 2},
+                {x: 5, y: 1, w: 1, h: 2},
+                {x: 4, y: 3, w: 1, h: 2},
+                {x: 6, y: 3, w: 1, h: 2}
+            ],
+            bigCard: [
+                {x: 4, y: 0, w: 2, h: 2},
+                {x: 3, y: 1, w: 2, h: 2},
+                {x: 3, y: 2, w: 2, h: 2}
+            ]
+        };
+
+        for (var permAddr in this.props.devs) {
+            for (var auxId in this.props.devs[permAddr].gads) {
+                var type = this.props.devs[permAddr].gads[auxId].type,
+                    card = this.getCard(type);
+                allGadRender.push(card);
+            }
+        }
+
+        allGadRender.push(
+            <div key='Weather' data-grid={{x: 6, y: 0, w: 2, h: 4}}>
+                <Weather />
+            </div>
+        );
 
         return (
             <div>
-                <ReactGridLayout layout={layout} rowHeight={60} isDraggable={false}>
-                    <div key="SmallCard1">
-                        <Light />
-                    </div>
-
-                    <div key="SmallCard2">
-                        <Buzzer />
-                    </div>
-
-                    <div key="SmallCard3">
-                        <Flame />
-                    </div>
-
-                    <div key="SmallCard4">
-                        <Pir />
-                    </div>
-
-                    <div key="SmallCard5">
-                        <Switch />
-                    </div>
-                    
-                    <div key="BigCard1">
-                        <Temperature />
-                    </div>
-
-                    <div key="BigCard2">
-                        <Humidity />
-                    </div>
-
-                    <div key="BigCard3">
-                        <Illuminance />
-                    </div>
-
-                    <div key="WeatherCard">
-                        <Weather />
-                    </div>
+                <ReactGridLayout rowHeight={60} isDraggable={false}>
+                    {allGadRender}
                 </ReactGridLayout>
             </div>
         );
     }
 });
-
+                    
 function mapStateToProps (state) {
     return { 
         devs: state.cardBlock.devs 
@@ -83,6 +156,6 @@ function mapStateToProps (state) {
 }
 
 export default connect(
-    mapStateToProps , 
+    mapStateToProps, 
     {getDevs}
 )(CardBlock)

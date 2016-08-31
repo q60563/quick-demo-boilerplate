@@ -32,5 +32,5 @@ export function permitJoin(time) {
 }
 
 export function permitJoining(timeLeft) {
-    return { type: PERMITJOIN, timeLeft: timeLeft };
+    return { type: PERMITJOINING, timeLeft: timeLeft };
 }
