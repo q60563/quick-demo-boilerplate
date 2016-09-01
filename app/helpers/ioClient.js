@@ -29,7 +29,7 @@ IoClient.prototype.start = function (addr) {
         startSuccess = true;
 
     if (this.isRunning())
-        return startSuccess;
+        return this;
 
     if (!_.isString(addr))
         throw new Error('addr must be a string');
@@ -61,19 +61,19 @@ IoClient.prototype.start = function (addr) {
     return this;
 };
 
-IoClient.prototype.sendReq = function (cmdName, args, callback) {
+IoClient.prototype.sendReq = function (reqType, args, callback) {
     var self = this,
         evt,
         reqMsg = {
             seq: this._nextTransId(),
-            cmd: cmdName, 
+            cmd: reqType, 
             args: args
         },
         timeoutCntl,
         rspLsn;
 
-    if (!_.isString(cmdName))
-        throw new Error('cmdName must be a string');
+    if (!_.isString(reqType))
+        throw new Error('reqType must be a string');
     else if (!_.isPlainObject(args))
         throw new Error('args must be an object');
     else if (!_.isFunction(callback))
@@ -84,7 +84,7 @@ IoClient.prototype.sendReq = function (cmdName, args, callback) {
     } else if (!this._connected) {
         return callback(new Error ('ioClient connection is closed.'));
     } else {
-        evt = cmdName + ':' + reqMsg.seq;
+        evt = reqType + ':' + reqMsg.seq;
     }
 
     timeoutCntl = setTimeout(function () {

@@ -29,21 +29,25 @@ IoServer.prototype.isRunning = function () {
 };
 
 IoServer.prototype.start = function (server) {
+    var startSuccess = true;
+
     if (!server || !_.isObject(server))
         throw new Error('server must be given in object');
 
     if (this.isRunning())
-        return this;
+        return startSuccess;
 
     this._server = Server(server);
     this._server.on('connection', this._onConnection);
 
-    return this;
+    return startSuccess;
 };
 
 IoServer.prototype.stop = function () {
+    var stopSuccess = true;
+
     if (!this.isRunning)
-        return this;
+        return stopSuccess;
 
     this._server.close();
     this._server.removeListener('connection', this._onConnection);
@@ -51,27 +55,27 @@ IoServer.prototype.stop = function () {
     this._server = null;
     this._clients = [];
 
-    return this;
+    return stopSuccess;
 };
 
-IoServer.prototype.sendInd = function (evtName, data) {
-    if (!_.isString(evtName))
-        throw new TypeError('evtName must be a string');
+IoServer.prototype.sendInd = function (indType, data) {
+    if (!_.isString(indType))
+        throw new TypeError('indType must be a string');
     if (!_.isPlainObject(data))
         throw new TypeError('data must be an object');
 
-    this._sendInd(evtName, data);
+    this._sendInd(indType, data);
 
     return this;
 };
 
-IoServer.prototype.regReqHdlr = function (cmdName, handler) {
-    if (!_.isString(cmdName))
-        throw new TypeError('cmdName must be a string');
+IoServer.prototype.regReqHdlr = function (reqType, handler) {
+    if (!_.isString(reqType))
+        throw new TypeError('reqType must be a string');
     if (!_.isFunction(handler))
         throw new TypeError('handler must be a function');
 
-    this._reqHdlrs[cmdName] = handler;
+    this._reqHdlrs[reqType] = handler;
 
     return this;
 };
