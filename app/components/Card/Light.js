@@ -2,54 +2,37 @@ import React from 'react';
 import LightOnIcon from '../Icons/LightOnIcon'
 import LightOffIcon from '../Icons/LightOffIcon'
 
-import {connect} from 'react-redux';
-import {on, off} from '../../redux/modules/LightCard';
-
-// props: { enable, onOff, onLightClick }
-
-var bgColor = '#F89D24',
+var fgColor = "#FFF",
+    bgColor = '#F89D24',
+    fgColorDisabled = "#EEEEEE",
+    bgColorDisabled = "#BDBDBD",
     fgColorOn = "#FFF",
-    fgColorOff = "#5D4037";
+    fgColorOff = "#FFF";
 
-var LightCard = React.createClass({
-    getDefaultProps: function () {
-        return {
-            enable: false,
-            onOff: false,
-            onLightClick: null  // function (onOff) {}
-        }
-    },
-    handleClick: function () {
-        return this.props.onLightClick(!this.props.onOff);
-    },
-    render: function () {
-        var icon = !!this.props.onOff ? <LightOnIcon fill={fgColorOn} /> : <LightOffIcon fill={fgColorOff} />;
-
-        return (
-            <div onClick={this.handleClick} style={{width: '100%', height: '100%', backgroundColor: bgColor }}>
-                {icon}
-            </div>
-        );
-    }
-});
-
-function mapStateToProps (state) {
-    return { 
-        enable: state.enable,
-        onOff: state.onOff,
+const Light = ({ enable, onOff, onClick }) => {
+    enable = !!enable;
+    onOff = !!onOff;
+    onClick = onClick || function () {
+        console.log('Light clicked');
     };
+
+    let cardBgColor = enable ? bgColor : bgColorDisabled;
+    let cardFgColor = enable ? (onOff ? fgColorOn : fgColorOff) : fgColorDisabled;
+
+    let reallyOn = enable && onOff;
+    let icon = reallyOn ? <LightOnIcon fill={cardFgColor} /> : <LightOffIcon fill={cardFgColor} />;
+
+    return (
+        <div style={{width: '100%', height: '100%', backgroundColor: cardBgColor }} onClick={onClick}>
+            {icon}
+        </div>
+    );
 }
 
-function mapDispatchToProps (dispatch) {
-    return {
-        onLightClick: function (onOff) {
-            var action = !!onOff ? on() : off();
-            dispatch(action);
-        }
-    }
-}
+// Light.propTypes = {
+//     enable: PropTypes.bool.isRequired,
+//     onOff: PropTypes.bool.isRequired,
+//     onClick: PropTypes.func.isRequired
+// };
 
-export default connect(
-    mapStateToProps, 
-    mapDispatchToProps
-)(LightCard)
+export default Light

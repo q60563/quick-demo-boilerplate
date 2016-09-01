@@ -3,23 +3,40 @@ import FireIcon from '../Icons/FireIcon'
 
 var csshake = require('../../styles/csshake.css');
 
-var bgColor = '#F89D24',
-    fgColorOn = "#FFF",
-    fgColorOff = "#5D4037";
+var fgColor = "#FFF",
+    bgColor = '#F89D24',
+    fgColorDisabled = "#EEEEEE",
+    bgColorDisabled = "#BDBDBD",
+    fgColorOn = "#FF7C80",
+    fgColorOff = "#FFF";
 
-var FlameCard = React.createClass({
-    getDefaultProps: function () {
-        return {
-            triggered: false
-        }
-    },
-    render: function () {
-        return (
-            <div className={csshake['shake-opacity'] + ' ' + csshake['shake-constant'] + ' ' + csshake['shake-constant--hover']} style={{width: '100%', height: '100%', backgroundColor: bgColor}}>
-                <FireIcon fill="#FF7C80" />
-            </div>
-        );
-    }
-});
+const Flame = ({ enable, triggered, onClick }) => {
+    enable = !!enable;
+    triggered = !!triggered;
+    onClick = onClick || function () {
+        console.log('Flame clicked');
+    };
 
-module.exports = FlameCard;
+    let cardBgColor = enable ? bgColor : bgColorDisabled;
+    let cardFgColor = enable ? (triggered ? fgColorOn : fgColorOff) : fgColorDisabled;
+
+    let reallyTriggered = enable && triggered;
+    let icon = reallyTriggered ? <FireIcon fill={cardFgColor} /> : <FireIcon fill={cardFgColor} />;
+    let shakeClass = reallyTriggered ? (csshake['shake-opacity'] + ' ' + csshake['shake-constant'] + ' ' + csshake['shake-constant--hover']) : '';
+
+    return (
+        <div className={shakeClass} style={{width: '100%', height: '100%', backgroundColor: cardBgColor}} onClick={onClick}>
+            {icon}
+        </div>
+    );
+
+}
+
+// Flame.propTypes = {
+//     enable: PropTypes.bool.isRequired,
+//     triggered: PropTypes.bool.isRequired,
+// //    onClick    // optional
+// };
+
+export default Flame
+

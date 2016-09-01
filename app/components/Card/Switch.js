@@ -2,24 +2,37 @@ import React from 'react';
 import SwitchOnIcon from '../Icons/SwitchOnIcon'
 import SwitchOffIcon from '../Icons/SwitchOffIcon'
 
-var bgColor = '#5CB85C',
+var fgColor = "#FFF",
+    bgColor = '#5CB85C',
+    fgColorDisabled = "#EEEEEE",
+    bgColorDisabled = "#BDBDBD",
     fgColorOn = "#FFF",
     fgColorOff = "#FFF";
 
-var SwitchCard = React.createClass({
-    getDefaultProps: function () {
-        return {
-            onOff: true
-        }
-    },
-    render: function () {
-        var icon = !!this.props.onOff ? (<SwitchOnIcon fill={fgColorOn} />) : (<SwitchOffIcon fill={fgColorOff} />);
-        return (
-            <div style={{width: '100%', height: '100%', backgroundColor: bgColor}}>
-                {icon}
-            </div>
-        );
-    }
-});
+const Switch = ({ enable, onOff, onClick }) => {
+    enable = !!enable;
+    onOff = !!onOff;
+    onClick = onClick || function () {
+        console.log('Switch clicked');
+    };
 
-module.exports = SwitchCard;
+    let cardBgColor = enable ? bgColor : bgColorDisabled;
+    let cardFgColor = enable ? (onOff ? fgColorOn : fgColorOff) : fgColorDisabled;
+
+    let reallyOn = enable && onOff;
+    let icon = reallyOn ? (<SwitchOnIcon fill={cardFgColor} />) : (<SwitchOffIcon fill={cardFgColor} />);
+
+    return (
+        <div style={{width: '100%', height: '100%', backgroundColor: cardBgColor}}>
+            {icon}
+        </div>
+    );
+}
+
+// Switch.propTypes = {
+//     enable: PropTypes.bool.isRequired,
+//     onOff: PropTypes.bool.isRequired,
+//     onClick: PropTypes.func.isRequired
+// };
+
+export default Switch

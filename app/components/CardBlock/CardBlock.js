@@ -66,21 +66,27 @@ var CardBlock = React.createClass({
         var card,
             cardProps = this.getKeyAndDataGrid(type);
 
+        // <Light enable={true/false} onOff={true/false} onClick={optional} />
+        // <Buzzer enable={true/false} onOff={true/false} onClick={optional} />
+        // <Flame enable={true/false} triggered={true/false} onClick={optional} />
+        // <Pir enable={true/false} triggered={true/false} onClick={optional} />
+        // <Switch enable={true/false} onOff={true/false} onClick={optional} />
+
         switch (type) {
             case 'Light':
-                card = (<Light />);
+                card = (<Light enable={true} onOff={true} />);
                 break;
             case 'Buzzer':
-                card = (<Buzzer />);
+                card = (<Buzzer enable={true} onOff={true} />);
                 break;
             case 'Flame':
-                card = (<Flame />);
+                card = (<Flame enable={true} triggered={true} />);
                 break;
             case 'Pir':
-                card = (<Pir />);
+                card = (<Pir enable={true} triggered={true} />);
                 break;
             case 'Switch':
-                card = (<Switch />);
+                card = (<Switch enable={true} onOff={true}/>);
                 break;
             case 'Temperature':
                 card = (<Temperature />);

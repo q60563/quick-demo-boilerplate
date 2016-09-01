@@ -6,7 +6,7 @@ import weather from './modules/weather';
 import noticeBar from './modules/noticeBar';
 
 export default combineReducers({
-	navBar,
+    navBar,
     cardBlock,
     weather,
     noticeBar
