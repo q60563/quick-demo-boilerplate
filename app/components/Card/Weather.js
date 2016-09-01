@@ -11,17 +11,24 @@ var WeatherCard = React.createClass({
         this.props.getWeather('25.071988', '121.578406');
     },
     render: function () {
+        var weatherIconUrl;
+
+        if (this.props.weather.weather[0].icon) {
+            weatherIconUrl = 'http://openweathermap.org/img/w/' + this.props.weather.weather[0].icon + '.png';
+        }
+
         return (
             <div style={{width: '100%', height: '100%', backgroundColor: '#03A9F4'}}>
-                <div style={{float: 'left', width: '50%', color: 'white', padding: '10% 2.5%'}}>
+                <div style={{float: 'left', width: '45%', color: 'white', padding: '15% 0% 15% 10%'}}>
                     <div style={{fontSize: '20px'}}>{this.props.weather.weather[0].description}</div>
-                    <div style={{fontSize: '28px', fontWeight:'bolder', padding: '0% 0% 0% 20%', margin:'20% 0%'}}>{this.props.weather.main.temp} °</div>
+                    <div style={{fontSize: '24px', fontWeight:'bolder', margin:'30% 0%'}}>{this.props.weather.main.temp}°</div>
+                    <div style={{fontSize: '20px', margin:'30% 0%'}}>{this.props.weather.name}</div>
                 </div>
 
-                <div style={{float: 'left', width: '40%', color: 'white', padding: '10% 2.5%'}}>
-                    <div style={{}}></div>
-                    <div style={{fontSize: '20px', fontWeight:'bold', margin:'10% 0%'}}>{this.props.weather.main.temp_min} °</div>
-                    <div style={{fontSize: '20px', fontWeight:'bold', margin:'10% 0%'}}>{this.props.weather.main.temp_max} °</div>
+                <div style={{float: 'left', width: '45%', color: 'white', padding: '10% 0%'}}>
+                    <div style={{width: '100%', height: '30%', margin:'0% 0% 10% 0%'}}><img src={weatherIconUrl} style={{width: '80%', height: '80%'}} /></div>
+                    <div style={{fontSize: '20px', fontWeight:'bold', margin:'10% 0%'}}>{this.props.weather.main.temp_min}°</div>
+                    <div style={{fontSize: '20px', fontWeight:'bold', margin:'10% 0%'}}>{this.props.weather.main.temp_max}°</div>
                 </div>
             </div>
         );
