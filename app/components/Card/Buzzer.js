@@ -1,31 +1,41 @@
-import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
+import React, { PropTypes } from 'react';
+import BuzzerOnIcon from '../Icons/BuzzerOnIcon'
+import BuzzerOffIcon from '../Icons/BuzzerOffIcon'
 
-import {write} from '../../redux/modules/cardBlock';
+var csshake = require('../../styles/csshake.css');
 
-var BuzzerCard = React.createClass({
-    propTypes: {
-        write: PropTypes.func.isRequired
-    },
-    handleClick: function () {
-        
-    },
-    render: function () {
-        return (
-            <div style={{width: '100%', height: '100%', backgroundColor: '#89C4F4'}}>
-                BuzzerCard
-            </div>
-        );
-    }
-});
+var fgColor = "#FFF",
+    bgColor = '#357FBD',
+    fgColorDisabled = "#EEEEEE",
+    bgColorDisabled = "#BDBDBD",
+    fgColorOn = "#FFF",
+    fgColorOff = "#FFF";
 
-function mapStateToProps (state) {
-    return { 
-        devs: state.cardBlock.devs
+const Buzzer = ({ enable, onOff, onClick }) => {
+    enable = !!enable;
+    onOff = !!onOff;
+    onClick = onClick || function () {
+        console.log('Buzzer clicked');
     };
+
+    let cardBgColor = enable ? bgColor : bgColorDisabled;
+    let cardFgColor = enable ? (onOff ? fgColorOn : fgColorOff) : fgColorDisabled;
+
+    let reallyOn = enable && onOff;
+    let icon = reallyOn ? <BuzzerOnIcon fill={cardFgColor} /> : <BuzzerOffIcon fill={cardFgColor} />;
+    let shakeClass = reallyOn ? csshake['shake-rotate'] + ' ' + csshake['shake-constant'] + ' ' + csshake['shake-constant--hover'] : '';
+
+    return (
+        <div className={shakeClass} style={{width: '100%', height: '100%', backgroundColor: cardBgColor }} onClick={onClick} >
+            {icon}
+        </div>
+    );
 }
 
-export default connect(
-    mapStateToProps, 
-    {write}
-)(BuzzerCard)
+// Buzzer.propTypes = {
+//     enable: PropTypes.bool.isRequired,
+//     onOff: PropTypes.bool.isRequired,
+//     onClick: PropTypes.func.isRequired
+// };
+
+export default Buzzer
