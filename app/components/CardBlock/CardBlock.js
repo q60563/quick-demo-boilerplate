@@ -37,10 +37,12 @@ var CardBlock = React.createClass({
                 cardProps.key = 'smallCard' + keyCounter.small;
                 keyCounter.small += 1;
 
+
+
                 if (layoutDataGrids.smallCard.length > 0) 
                     cardProps.dataGrid = layoutDataGrids.smallCard.splice(-(layoutDataGrids.smallCard.length), 1)[0];
                 else 
-                    cardProps.dataGrid = {x: 4, y: 4, w: 1, h: 2};
+                    cardProps.dataGrid = {x: Math.floor(Math.random() * 5) + 3, y: 4, w: 1, h: 2};
                 break;
 
             case 'Temperature':
@@ -52,7 +54,7 @@ var CardBlock = React.createClass({
                 if (layoutDataGrids.bigCard.length > 0) 
                     cardProps.dataGrid = layoutDataGrids.bigCard.splice(-(layoutDataGrids.bigCard.length), 1)[0];
                 else 
-                    cardProps.dataGrid = {x: 4, y: 4, w: 2, h: 2};
+                    cardProps.dataGrid = {x: Math.floor(Math.random() * 5) + 3, y: 4, w: 2, h: 2};
                 break;
 
             default:
@@ -62,9 +64,22 @@ var CardBlock = React.createClass({
         return cardProps;
     },
 
-    getCard: function (type) {
+    onClickCallback: function (permAddr, auxId, value) {
+        var self = this;
+
+        return function () {
+            self.props.write(permAddr, auxId, !value);
+        };
+    },
+
+    getCard: function (type, permAddr, status, auxId, value) {
         var card,
+            enable = false,
             cardProps = this.getKeyAndDataGrid(type);
+
+        if (status === 'online') {
+            enable = true;
+        }
 
         // <Light enable={true/false} onOff={true/false} onClick={optional} />
         // <Buzzer enable={true/false} onOff={true/false} onClick={optional} />
@@ -74,19 +89,19 @@ var CardBlock = React.createClass({
 
         switch (type) {
             case 'Light':
-                card = (<Light enable={true} onOff={true} />);
+                card = (<Light enable={enable} onOff={value} onClick={this.onClickCallback(permAddr, auxId, value)} />);
                 break;
             case 'Buzzer':
-                card = (<Buzzer enable={true} onOff={true} />);
+                card = (<Buzzer enable={enable} onOff={value} onClick={this.onClickCallback(permAddr, auxId, value)} />);
                 break;
             case 'Flame':
-                card = (<Flame enable={true} triggered={true} />);
+                card = (<Flame enable={enable} triggered={value} />);
                 break;
             case 'Pir':
-                card = (<Pir enable={true} triggered={true} />);
+                card = (<Pir enable={enable} triggered={value} />);
                 break;
             case 'Switch':
-                card = (<Switch enable={true} onOff={true}/>);
+                card = (<Switch enable={enable} onOff={value}/>);
                 break;
             case 'Temperature':
                 card = (<Temperature />);
@@ -134,7 +149,10 @@ var CardBlock = React.createClass({
         for (var permAddr in this.props.devs) {
             for (var auxId in this.props.devs[permAddr].gads) {
                 var type = this.props.devs[permAddr].gads[auxId].type,
-                    card = this.getCard(type);
+                    status = this.props.devs[permAddr].status,
+                    value = this.props.devs[permAddr].gads[auxId].value,
+                    card = this.getCard(type, permAddr, status, auxId, value);
+
                 allGadRender.push(card);
             }
         }
@@ -146,7 +164,7 @@ var CardBlock = React.createClass({
         );
 
         return (
-            <div>
+            <div style={{margin:'2% 0%'}}>
                 <ReactGridLayout rowHeight={60} isDraggable={false}>
                     {allGadRender}
                 </ReactGridLayout>
@@ -163,5 +181,5 @@ function mapStateToProps (state) {
 
 export default connect(
     mapStateToProps, 
-    {getDevs}
+    {getDevs, write}
 )(CardBlock)

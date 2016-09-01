@@ -1,81 +1,173 @@
+var http = require('http'); 
+
 var chalk = require('chalk');
 
 var ioServer = require('./helpers/ioServer');
+var server = http.createServer();
+
+server.listen(3030);
+
+ioServer.start(server);
 
 /************************/
 /* Event handle         */
 /************************/
-// listen shepherd emit and call ioServer.sendInd()
 /*** ready            ***/
-// ioServer.sendInd('ready');
-// console.log(ready());
+// readyInd();
 
 /*** permitJoining    ***/
-// ioServer.sendInd('permitJoining');
-// console.log(permitJoining(timeLift));
+// permitJoiningInd(timeLift);
 
 /*** error            ***/
-// ioServer.sendInd('error');
-// console.log(error(msg));
+// errorInd(msg);
 
 /*** devIncoming      ***/
-// ioServer.sendInd('devIncoming')
-// console.log(devIncoming(permAddr));
+// devIncomingInd(permAddr);
 
 /*** devStatus        ***/
-// ioServer.sendInd('devStatus')
-// console.log(devStatus(permAddr, status));
+// devStatusInd(permAddr, status);
 
 /*** attrsChange      ***/
-// ioServer.sendInd('attrsChange')
-// console.log(attrsChange(permAddr, data));
+// attrsChangeInd(permAddr, data);
 
 /**********************************/
 /* start shepherd                 */
 /**********************************/
 var app = function () {
 // start shepherd
-
 /************************/
 /* regReqHdlr handle    */
 /************************/
-// ioServer.regReqHdlr('getDevs', function (cb) {});
-// ioServer.regReqHdlr('permitJoin', function (timeLeft, cb) {});
-// ioServer.regReqHdlr('write', function (permAddr, auxId, value, cb) {});
+    ioServer.regReqHdlr('getDevs', function (args, cb) { console.log(args); });
+    ioServer.regReqHdlr('permitJoin', function (args, cb) { console.log(args); });
+    ioServer.regReqHdlr('write', function (args, cb) { console.log(args); });
 // cb(status, date)
 
+    setInterval(function () {
+        devIncomingInd({
+            permAddr: 'AA:BB:CC:DD:EE',
+            status: 'online',
+            gads: { 
+                'temp/0': {
+                    type: 'Temperature',
+                    auxId: 'temp/0',
+                    value: '19'
+                },
+                'hum/0': {
+                    type: 'Humidity',
+                    auxId: 'hum/0',
+                    value: '56'
+                },
+                'light/0': {
+                    type: 'Light',
+                    auxId: 'light/0',
+                    value: true
+                },
+                'switch/0': {
+                    type: 'Switch',
+                    auxId: 'switch/0',
+                    value: true
+                } 
+            }
+        });
+    }, 4000);
+
+    // setInterval(function () {
+    //     devIncomingInd({
+    //         permAddr: 'AA:BB:CC:DD:FF',
+    //         status: 'online',
+    //         gads: { 
+    //             'illu/0': {
+    //                 type: 'Illuminance',
+    //                 auxId: 'illu/0',
+    //                 value: '108'
+    //             },
+    //             'buzzer/0': {
+    //                 type: 'Buzzer',
+    //                 auxId: 'buzzer/0',
+    //                 value: true
+    //             },
+    //             'flame/0': {
+    //                 type: 'Flame',
+    //                 auxId: 'flame/0',
+    //                 value: true
+    //             },
+    //             'pir/0': {
+    //                 type: 'Pir',
+    //                 auxId: 'pir/0',
+    //                 value: true
+    //             }
+    //         }
+    //     });
+    // }, 5000);
+
+    // setInterval(function () {
+    //     attrsChangeInd('AA:BB:CC:DD:EE', {
+    //         type: 'Temperature',
+    //         auxId: 'temp/0',
+    //         value: '22'
+    //     });
+    // }, 7000);
+
+    // setInterval(function () {
+    //     attrsChangeInd('AA:BB:CC:DD:EE', {
+    //         type: 'Switch',
+    //         auxId: 'switch/0',
+    //         value: false
+    //     });
+    // }, 7000);
+
+    // setInterval(function () {
+    //     toastInd('Test');
+    // }, 8000);
+
+    // setInterval(function () {
+    //     devStatusInd('AA:BB:CC:DD:EE', 'offline');
+    // }, 10000);
 };
 
 /**********************************/
 /* chalk funciton                 */
 /**********************************/
-function ready () {
-    return chalk.green('[         ready ] ');
+function readyInd () {
+    ioServer.sendInd('ready', {});
+    console.log(chalk.green('[         ready ] '));
 }
 
-function permitJoining (timeLift) {
-    return chalk.green('[ permitJoining ] ') + timeLift + ' sec';
+function permitJoiningInd (timeLift) {
+    ioServer.sendInd('permitJoining', { timeLift: timeLift });
+    console.log(chalk.green('[ permitJoining ] ') + timeLift + ' sec');
 }
 
-function error (msg) {
-    return chalk.red('[         error ] ') + msg;
+function errorInd (msg) {
+    ioServer.sendInd('error', { msg: msg });
+    console.log(chalk.red('[         error ] ') + msg);
 }
 
-function devIncoming (permAddr) {
-    return chalk.yellow('[   devIncoming ] ') + '@' + permAddr;
+function devIncomingInd (dev) {
+     ioServer.sendInd('devIncoming', { dev: dev });
+    console.log(chalk.yellow('[   devIncoming ] ') + '@' + dev.permAddr);
 }
 
-function devStatus (permAddr, status) {
+function devStatusInd (permAddr, status) {
+    ioServer.sendInd('devStatus', { permAddr: permAddr, status: status });
+
     if (status === 'online')
         status = chalk.green(status);
     else 
         status = chalk.red(status);
 
-    return chalk.yellow('[     devStatus ] ') + '@' + permAddr + ', ' + status;
+    console.log(chalk.yellow('[     devStatus ] ') + '@' + permAddr + ', ' + status);
 }
 
-function attrsChange (permAddr, data) {
-    return chalk.blue('[   attrsChange ] ') + '@' + permAddr + ', ' + JSON.stringify(data);
+function attrsChangeInd (permAddr, gad) {
+    ioServer.sendInd('attrsChange', { permAddr: permAddr, gad: gad });
+    console.log(chalk.blue('[   attrsChange ] ') + '@' + permAddr + ', ' + JSON.stringify(gad));
+}
+
+function toastInd (msg) {
+    ioServer.sendInd('toast', { msg: msg });
+
 }
 
 module.exports = app;

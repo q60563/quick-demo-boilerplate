@@ -14,9 +14,9 @@ var fgColor = "#FFF",
 const Buzzer = ({ enable, onOff, onClick }) => {
     enable = !!enable;
     onOff = !!onOff;
-    onClick = onClick || function () {
+    onClick = enable ? onClick || function () {
         console.log('Buzzer clicked');
-    };
+    } : null;
 
     let cardBgColor = enable ? bgColor : bgColorDisabled;
     let cardFgColor = enable ? (onOff ? fgColorOn : fgColorOff) : fgColorDisabled;
@@ -32,10 +32,10 @@ const Buzzer = ({ enable, onOff, onClick }) => {
     );
 }
 
-// Buzzer.propTypes = {
-//     enable: PropTypes.bool.isRequired,
-//     onOff: PropTypes.bool.isRequired,
-//     onClick: PropTypes.func.isRequired
-// };
+Buzzer.propTypes = {
+    enable: PropTypes.bool.isRequired,
+    onOff: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired
+};
 
 export default Buzzer

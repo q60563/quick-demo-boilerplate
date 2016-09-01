@@ -12,7 +12,7 @@ import reducer from './redux/reducer';
 import clientMiddleware from './redux/clientMiddleware';
 import {permitJoining} from './redux/modules/navBar';
 import {devIncoming, devStatus, attrsChange} from './redux/modules/cardBlock';
-import {notice, requestClose} from './redux/modules/navBar';
+import {notice, requestClose} from './redux/modules/noticeBar';
 
 import NavBar from './components/NavBar/NavBar';
 import CardBlock from './components/CardBlock/CardBlock';
@@ -24,108 +24,37 @@ import NoticeBar from './components/NoticeBar/NoticeBar';
 var store = createStore(reducer, applyMiddleware(clientMiddleware)),
     title = 'coap-shepherd';
 
-ioClient.start();
-ioClient.on('ind', function (msg) {
-    switch (msg.type) {
-        case 'ready':
+ioClient.start('http://localhost:3030');
 
-            break;
-        case 'permitJoining':  // msg.data = { timeLeft }
-            store.dispatch(permitJoining(msg.data.timeLeft));
-            break;
-        case 'devIncoming':    // msg.data = devInfo
-            store.dispatch(devIncoming(msg.data));  
-            break;
-        case 'devStatus':      // msg.data = { permAddr, status }
-            store.dispatch(devStatus(msg.data.permAddr, msg.data.status));
-            break;
-        case 'attrsChange':    // msg.data = { permAddr, gadInfo } 
-            store.dispatch(attrsChange(msg.data.permAddr, msg.data.gad));
-            break;
-        case 'toast':          // msg.data = { msg }
-            store.dispatch(notice(true, msg.data.msg));
-            break;
-        default:
-            break;
-    }
+ioClient.on('permitJoining', function (msg) {
+    // msg = { timeLeft }
+    store.dispatch(permitJoining(msg.timeLeft));
+});
+
+ioClient.on('devIncoming', function (msg) {
+    // msg =  { dev}
+    store.dispatch(devIncoming(msg.dev));  
+});
+
+ioClient.on('devStatus', function (msg) {
+    // msg = { permAddr, status }
+    store.dispatch(devStatus(msg.permAddr, msg.status));
+});
+
+ioClient.on('attrsChange', function (msg) {
+    // msg = { permAddr, gad } 
+    store.dispatch(attrsChange(msg.permAddr, msg.gad));
+});
+
+ioClient.on('toast', function (msg) {
+    // msg = { msg }
+    store.dispatch(notice(true, msg.msg));
 });
 
 /*********************************************/
 /* App component                             */
 /*********************************************/
 var App = React.createClass({
-    componentDidMount : function () {
-        setTimeout(function () {
-            store.dispatch(devIncoming({
-                permAddr: 'AA:BB:CC:DD:EE',
-                status: 'online',
-                gads: { 
-                    'temp/0': {
-                        type: 'Temperature',
-                        auxId: 'temp/0',
-                        value: '20'
-                    },
-                    'hum/0': {
-                        type: 'Humidity',
-                        auxId: 'hum/0',
-                        value: '56'
-                    },
-                    'light/0': {
-                        type: 'Light',
-                        auxId: 'light/0',
-                        value: 'off'
-                    },
-                    'buzzer/0': {
-                        type: 'Buzzer',
-                        auxId: 'buzzer/0',
-                        value: 'on'
-                    }
-                }
-            }));
-        }, 3000);
-
-        setTimeout(function () {
-            store.dispatch(devIncoming({
-                permAddr: 'AA:BB:CC:DD:FF',
-                status: 'online',
-                gads: { 
-                    'illu/0': {
-                        type: 'Illuminance',
-                        auxId: 'illu/0',
-                        value: '108'
-                    },
-                    'flame/0': {
-                        type: 'Flame',
-                        auxId: 'flame/0',
-                        value: 'off'
-                    },
-                    'pir/0': {
-                        type: 'Pir',
-                        auxId: 'pir/0',
-                        value: 'off'
-                    },
-                    'switch/0': {
-                        type: 'Switch',
-                        auxId: 'switch/0',
-                        value: 'on'
-                    }
-                }
-            }));
-        }, 4000);
-
-        setTimeout(function () {
-            store.dispatch(devStatus('AA:BB:CC:DD:EE', 'offline'));
-        }, 5000);
-
-        setTimeout(function () {
-            store.dispatch(attrsChange('AA:BB:CC:DD:EE', {
-                type: 'Temperature',
-                auxId: 'temp/0',
-                value: '28'
-            }));
-        }, 7000);
-    },
-
     render: function () {
         return (
             <MuiThemeProvider>

@@ -6,7 +6,7 @@ const DEVSTATUS = 'app/cardBlock/DEVSTATUS';
 const ATTRSCHANGE = 'app/cardBlock/ATTRSCHANGE';
 
 const initialState = {
-        devs: {} 
+        devs: { } 
     };
 
 // Reducer
@@ -31,31 +31,37 @@ export default function reducer(state = initialState, action) {
             };
 
         case DEVSTATUS:
-            return {
-                ...state,
-                devs: {
-                    ...state.devs,
-                    [action.permAddr]: {
-                        ...state.devs[action.permAddr],
-                        status: action.status
-                    }
-                }
-            };
-
-        case ATTRSCHANGE:
-            return {
-                ...state,
-                devs: {
-                    ...state.devs,
-                    [action.permAddr]: {
-                        ...state.devs[action.permAddr],
-                        gads: {
-                            ...state.devs[action.permAddr].gads,
-                            [action.gad.auxId]: action.gad
+            if (!state.devs || !state.devs[action.permAddr]) 
+                return state;
+            else 
+                return {
+                    ...state,
+                    devs: {
+                        ...state.devs,
+                        [action.permAddr]: {
+                            ...state.devs[action.permAddr],
+                            status: action.status
                         }
                     }
-                }
-            };
+                };
+
+        case ATTRSCHANGE:
+            if (!state.devs ||!state.devs[action.permAddr] || !state.devs[action.permAddr].gads || !state.devs[action.permAddr].gads[action.gad.auxId]) 
+                return state;
+            else 
+                return {
+                    ...state,
+                    devs: {
+                        ...state.devs,
+                        [action.permAddr]: {
+                            ...state.devs[action.permAddr],
+                            gads: {
+                                ...state.devs[action.permAddr].gads,
+                                [action.gad.auxId]: action.gad
+                            }
+                        }
+                    }
+                };
 
         default:
             return state;

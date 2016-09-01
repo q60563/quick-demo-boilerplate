@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import LightOnIcon from '../Icons/LightOnIcon'
 import LightOffIcon from '../Icons/LightOffIcon'
 
@@ -12,9 +12,9 @@ var fgColor = "#FFF",
 const Light = ({ enable, onOff, onClick }) => {
     enable = !!enable;
     onOff = !!onOff;
-    onClick = onClick || function () {
+    onClick = enable ? onClick || function () {
         console.log('Light clicked');
-    };
+    } : null;
 
     let cardBgColor = enable ? bgColor : bgColorDisabled;
     let cardFgColor = enable ? (onOff ? fgColorOn : fgColorOff) : fgColorDisabled;
@@ -29,10 +29,10 @@ const Light = ({ enable, onOff, onClick }) => {
     );
 }
 
-// Light.propTypes = {
-//     enable: PropTypes.bool.isRequired,
-//     onOff: PropTypes.bool.isRequired,
-//     onClick: PropTypes.func.isRequired
-// };
+Light.propTypes = {
+    enable: PropTypes.bool.isRequired,
+    onOff: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired
+};
 
 export default Light
