@@ -38,9 +38,18 @@ var app = function () {
 /************************/
 /* regReqHdlr handle    */
 /************************/
-    ioServer.regReqHdlr('getDevs', function (args, cb) { console.log(args); });
-    ioServer.regReqHdlr('permitJoin', function (args, cb) { console.log(args); });
-    ioServer.regReqHdlr('write', function (args, cb) { console.log(args); });
+    ioServer.regReqHdlr('getDevs', function (args, cb) { 
+        console.log(args); 
+    });
+
+    ioServer.regReqHdlr('permitJoin', function (args, cb) { 
+        console.log(args); 
+    });
+
+    ioServer.regReqHdlr('write', function (args, cb) { 
+        console.log(args); 
+    });
+    
 // cb(status, date)
 
     setInterval(function () {

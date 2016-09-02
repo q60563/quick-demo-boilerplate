@@ -163,7 +163,7 @@ var CardBlock = React.createClass({
         );
 
         return (
-            <div style={{margin:'2% 0%'}}>
+            <div style={{margin:'1% 0%'}}>
                 <ReactGridLayout rowHeight={60} isDraggable={false}>
                     {allGadRender}
                 </ReactGridLayout>

@@ -39,3 +39,9 @@ $ cd quick-demo-boilerplate
 ├── webpack.config.js                # Webpack bundling and optimization settings for `npm start`
 └── webpack.production.config.js     # Webpack bundling and optimization settings for `npm build`
 ```
+
+## TODO
+
+* Change weather icon
+* Change console color and format
+* Responsive ReactGridLayout rowHeight

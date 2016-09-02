@@ -12,7 +12,7 @@ const clientMiddleware = store => next => action => {
 
 // navBar
         case PERMITJOIN:
-            ioClient.sendReq('PERMITJOIN', { time: action.time }, function (status, data) {
+            ioClient.sendReq('permitJoin', { time: action.time }, function (status, data) {
                 if (status === 0) {
                     console.log('error');
                 } else {

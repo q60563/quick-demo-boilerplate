@@ -29,9 +29,9 @@ const WeatherCard = React.createClass({
         return (
             <div style={{width: '100%', height: '100%', backgroundColor: '#99bbff'}}>
                 <div style={{float: 'left', width: '45%', color: 'white', padding: '20% 0% 10% 10%'}}>
-                    <div style={{fontSize: '0.8em', fontWeight:'bold'}}>{desc}</div>
+                    <div style={{fontSize: '1em'}}>{desc}</div>
                     <div style={{fontSize: '1.2em', fontWeight:'bolder', margin:'30% 0% 30% 10%'}}>{temp}°</div>
-                    <div style={{fontSize: '1em', fontWeight:'bold'}}>{name}</div>
+                    <div style={{fontSize: '1em'}}>{name}</div>
                 </div>
 
                 <div style={{float: 'left', width: '45%', padding: '10% 0%'}}>
