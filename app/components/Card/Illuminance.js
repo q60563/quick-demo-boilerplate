@@ -1,10 +1,16 @@
 import React from 'react';
 
-var bgColor = "#c2c2d6";
+var bgColor = "#F4B350",
+    bgColorDisabled = "#BDBDBD";
 
-const Illuminance = ({lux}) => {
+const Illuminance = ({enable, lux}) => {
+    enable = !!enable;
+
+    let cardBgColor = enable ? bgColor : bgColorDisabled;
+    let cardValue = enable ? lux : undefined;
+
     return (
-        <div style={{width: "100%", height: "100%", backgroundColor: bgColor }}>
+        <div style={{width: "100%", height: "100%", backgroundColor: cardBgColor }}>
             <div style={{float: "left", width: "50%", height: "100%"}}>
                 <div style={{position: "relative", top: "15%", left: "15%", width: "70%", height: "70%"}}>
                     <svg fill="white" height="100%" viewBox="0 0 24 24" width="100%" xmlns="http://www.w3.org/2000/svg">
@@ -15,8 +21,8 @@ const Illuminance = ({lux}) => {
             </div>
 
             <div style={{float: "left", width: "50%", height: "100%"}}>
-                <div style={{position: "absolute", top: "0", bottom: "0", left: "50%", right: "0", margin: "0", textAlign: "center", fontSize: "34px", lineHeight: "130px"}}>
-                    205 lx
+                <div style={{position: "absolute", top: "0", bottom: "0", left: "50%", right: "0", margin: "0", textAlign: "center", fontSize: "34px", lineHeight: "130px", color: "white"}}>
+                    {cardValue} lx
                 </div>
             </div>
         </div>

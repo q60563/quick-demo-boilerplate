@@ -72,42 +72,42 @@ var app = function () {
         });
     }, 4000);
 
-    // setInterval(function () {
-    //     devIncomingInd({
-    //         permAddr: 'AA:BB:CC:DD:FF',
-    //         status: 'online',
-    //         gads: { 
-    //             'illu/0': {
-    //                 type: 'Illuminance',
-    //                 auxId: 'illu/0',
-    //                 value: '108'
-    //             },
-    //             'buzzer/0': {
-    //                 type: 'Buzzer',
-    //                 auxId: 'buzzer/0',
-    //                 value: true
-    //             },
-    //             'flame/0': {
-    //                 type: 'Flame',
-    //                 auxId: 'flame/0',
-    //                 value: true
-    //             },
-    //             'pir/0': {
-    //                 type: 'Pir',
-    //                 auxId: 'pir/0',
-    //                 value: true
-    //             }
-    //         }
-    //     });
-    // }, 5000);
+    setInterval(function () {
+        devIncomingInd({
+            permAddr: 'AA:BB:CC:DD:FF',
+            status: 'online',
+            gads: { 
+                'illu/0': {
+                    type: 'Illuminance',
+                    auxId: 'illu/0',
+                    value: '108'
+                },
+                'buzzer/0': {
+                    type: 'Buzzer',
+                    auxId: 'buzzer/0',
+                    value: true
+                },
+                'flame/0': {
+                    type: 'Flame',
+                    auxId: 'flame/0',
+                    value: true
+                },
+                'pir/0': {
+                    type: 'Pir',
+                    auxId: 'pir/0',
+                    value: true
+                }
+            }
+        });
+    }, 5000);
 
-    // setInterval(function () {
-    //     attrsChangeInd('AA:BB:CC:DD:EE', {
-    //         type: 'Temperature',
-    //         auxId: 'temp/0',
-    //         value: '22'
-    //     });
-    // }, 7000);
+    setInterval(function () {
+        attrsChangeInd('AA:BB:CC:DD:EE', {
+            type: 'Temperature',
+            auxId: 'temp/0',
+            value: '22'
+        });
+    }, 7000);
 
     // setInterval(function () {
     //     attrsChangeInd('AA:BB:CC:DD:EE', {
@@ -121,9 +121,9 @@ var app = function () {
     //     toastInd('Test');
     // }, 8000);
 
-    // setInterval(function () {
-    //     devStatusInd('AA:BB:CC:DD:EE', 'offline');
-    // }, 10000);
+    setInterval(function () {
+        devStatusInd('AA:BB:CC:DD:EE', 'offline');
+    }, 10000);
 };
 
 /**********************************/

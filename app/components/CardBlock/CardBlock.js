@@ -101,16 +101,16 @@ var CardBlock = React.createClass({
                 card = (<Pir enable={enable} triggered={value} />);
                 break;
             case 'Switch':
-                card = (<Switch enable={enable} onOff={value}/>);
+                card = (<Switch enable={enable} onOff={value} />);
                 break;
             case 'Temperature':
-                card = (<Temperature />);
+                card = (<Temperature enable={enable} temp={value} />);
                 break;
             case 'Humidity':
-                card = (<Humidity />);
+                card = (<Humidity enable={enable} humid={value} />);
                 break;
             case 'Illuminance':
-                card = (<Illuminance />);
+                card = (<Illuminance enable={enable} lux={value} />);
                 break;
             default:
                 break;
@@ -133,9 +133,9 @@ var CardBlock = React.createClass({
 
         layoutDataGrids = {
             smallCard: [
+                {x: 5, y: 1, w: 1, h: 2},
                 {x: 5, y: 2, w: 1, h: 2},
                 {x: 6, y: 2, w: 1, h: 2},
-                {x: 5, y: 1, w: 1, h: 2},
                 {x: 4, y: 3, w: 1, h: 2},
                 {x: 6, y: 3, w: 1, h: 2}
             ],
