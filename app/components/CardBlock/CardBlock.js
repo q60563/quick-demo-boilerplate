@@ -125,7 +125,6 @@ var CardBlock = React.createClass({
 
     render: function () {
         var allGadRender = [];
-
         keyCounter = {
             small: 0,
             big: 0

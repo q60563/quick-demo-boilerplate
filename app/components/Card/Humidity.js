@@ -19,7 +19,7 @@ const Humidity = ({enable, humid}) => {
             </div>
 
             <div style={{float: "left", width: "50%", height: "100%"}}>
-                <div style={{position: "absolute", top: "0", bottom: "0", left: "50%", right: "0", margin: "0", textAlign: "center", fontSize: "36px", lineHeight: "130px", color: "white"}}>
+                <div style={{position: "absolute", top: "0", bottom: "0", left: "50%", right: "0", margin: "0", textAlign: "center", fontSize: "1.5em", lineHeight: "130px", color: "white"}}>
                     {cardValue} %
                 </div>
             </div>
