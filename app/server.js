@@ -16,7 +16,7 @@ ioServer.start(server);
 // readyInd();
 
 /*** permitJoining    ***/
-// permitJoiningInd(timeLift);
+// permitJoiningInd(timeLeft);
 
 /*** error            ***/
 // errorInd(msg);
@@ -143,9 +143,9 @@ function readyInd () {
     console.log(chalk.green('[         ready ] '));
 }
 
-function permitJoiningInd (timeLift) {
-    ioServer.sendInd('permitJoining', { timeLift: timeLift });
-    console.log(chalk.green('[ permitJoining ] ') + timeLift + ' sec');
+function permitJoiningInd (timeLeft) {
+    ioServer.sendInd('permitJoining', { timeLeft: timeLeft });
+    console.log(chalk.green('[ permitJoining ] ') + timeLeft + ' sec');
 }
 
 function errorInd (msg) {
