@@ -124,7 +124,9 @@ var CardBlock = React.createClass({
     },
 
     render: function () {
-        var allGadRender = [];
+        var allGadRender = [],
+            rowHeight;
+
         keyCounter = {
             small: 0,
             big: 0
@@ -162,9 +164,21 @@ var CardBlock = React.createClass({
             </div>
         );
 
+        if (window.matchMedia("(min-width: 1800px)").matches) {
+            rowHeight = 70;
+        } else if (window.matchMedia("(min-width: 1400px)").matches) {
+            rowHeight = 60;
+        } else if (window.matchMedia("(min-width: 1000px)").matches) {
+            rowHeight = 45;
+        } else if (window.matchMedia("(min-width: 600px)").matches) {
+            rowHeight = 35;
+        } else {
+            rowHeight = 20;
+        }
+
         return (
             <div style={{margin:'1% 0%'}}>
-                <ReactGridLayout rowHeight={60} isDraggable={false}>
+                <ReactGridLayout rowHeight={rowHeight} isDraggable={false}>
                     {allGadRender}
                 </ReactGridLayout>
             </div>

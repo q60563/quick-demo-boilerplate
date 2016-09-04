@@ -42,6 +42,4 @@ $ cd quick-demo-boilerplate
 
 ## TODO
 
-* Change weather icon
-* Change console color and format
-* Responsive ReactGridLayout rowHeight
+* Change console format

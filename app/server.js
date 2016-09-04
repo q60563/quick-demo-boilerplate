@@ -166,7 +166,7 @@ function devStatusInd (permAddr, status) {
     else 
         status = chalk.red(status);
 
-    console.log(chalk.yellow('[     devStatus ] ') + '@' + permAddr + ', ' + status);
+    console.log(chalk.magenta('[     devStatus ] ') + '@' + permAddr + ', ' + status);
 }
 
 function attrsChangeInd (permAddr, gad) {

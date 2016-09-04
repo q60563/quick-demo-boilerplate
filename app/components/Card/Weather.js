@@ -28,7 +28,7 @@ const WeatherCard = React.createClass({
 
         return (
             <div style={{width: '100%', height: '100%', backgroundColor: '#99bbff'}}>
-                <div style={{float: 'left', width: '45%', color: 'white', padding: '20% 0% 10% 10%'}}>
+                <div style={{float: 'left', width: '45%', color: 'white', padding: '10% 0% 10% 10%'}}>
                     <div style={{fontSize: '1em'}}>{desc}</div>
                     <div style={{fontSize: '1.2em', fontWeight:'bolder', margin:'30% 0% 30% 10%'}}>{temp}°</div>
                     <div style={{fontSize: '1em'}}>{name}</div>
@@ -36,8 +36,8 @@ const WeatherCard = React.createClass({
 
                 <div style={{float: 'left', width: '45%', padding: '10% 0%'}}>
                     <div style={{width: '100%', height: '30%'}}>{weatherIcon}</div>
-                    <div style={{fontSize: '1em', fontWeight:'bold', color: '#C5EFF7', margin:'20% 0% 20% 15%'}}>{tempMin}°</div>
-                    <div style={{fontSize: '1em', fontWeight:'bold', color: '#F1A9A0', margin:'20% 0% 20% 15%'}}>{tempMax}°</div>
+                    <div style={{fontSize: '1em', fontWeight:'bold', color: '#C5EFF7', margin:'5% 0% 20% 15%'}}>{tempMin}°</div>
+                    <div style={{fontSize: '1em', fontWeight:'bold', color: '#F1A9A0', margin:'10% 0% 20% 15%'}}>{tempMax}°</div>
                 </div>
             </div>
         );
