@@ -9,7 +9,6 @@ const GETWEATHER = 'app/weather/GETWEATHER';
 
 const clientMiddleware = store => next => action => {
     switch (action.type) {
-
 // navBar
         case PERMITJOIN:
             ioClient.sendReq('permitJoin', { time: action.time }, function (status, data) {

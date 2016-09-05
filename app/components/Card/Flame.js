@@ -4,7 +4,7 @@ import FireIcon from '../Icons/FireIcon'
 var csshake = require('../../styles/csshake.css');
 
 var fgColor = "#FFF",
-    bgColor = '#F89D24',
+    bgColor = '#E55934',
     fgColorDisabled = "#EEEEEE",
     bgColorDisabled = "#BDBDBD",
     fgColorOn = "#FF7C80",

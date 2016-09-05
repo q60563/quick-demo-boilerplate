@@ -1,9 +1,9 @@
-import React from 'react';
-import SwitchOnIcon from '../Icons/SwitchOnIcon'
-import SwitchOffIcon from '../Icons/SwitchOffIcon'
+import React, {PropTypes} from 'react';
+import SwitchOnIcon from '../Icons/SwitchOnIcon';
+import SwitchOffIcon from '../Icons/SwitchOffIcon';
 
 var fgColor = "#FFF",
-    bgColor = '#5CB85C',
+    bgColor = '#72E599',
     fgColorDisabled = "#EEEEEE",
     bgColorDisabled = "#BDBDBD",
     fgColorOn = "#FFF",
@@ -29,10 +29,10 @@ const Switch = ({ enable, onOff, onClick }) => {
     );
 }
 
-// Switch.propTypes = {
-//     enable: PropTypes.bool.isRequired,
-//     onOff: PropTypes.bool.isRequired,
-//     onClick: PropTypes.func.isRequired
-// };
+Switch.propTypes = {
+    enable: PropTypes.bool.isRequired,
+    onOff: PropTypes.bool.isRequired,
+    onClick: PropTypes.func
+};
 
 export default Switch

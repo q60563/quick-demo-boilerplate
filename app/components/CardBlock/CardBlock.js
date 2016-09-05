@@ -81,12 +81,6 @@ var CardBlock = React.createClass({
             enable = true;
         }
 
-        // <Light enable={true/false} onOff={true/false} onClick={optional} />
-        // <Buzzer enable={true/false} onOff={true/false} onClick={optional} />
-        // <Flame enable={true/false} triggered={true/false} onClick={optional} />
-        // <Pir enable={true/false} triggered={true/false} onClick={optional} />
-        // <Switch enable={true/false} onOff={true/false} onClick={optional} />
-
         switch (type) {
             case 'Light':
                 card = (<Light enable={enable} onOff={value} onClick={this.onClickCallback(permAddr, auxId, value)} />);
@@ -123,9 +117,27 @@ var CardBlock = React.createClass({
         );
     },
 
+    getRowHeight: function () {
+        var rowHeight;
+
+        if (window.matchMedia("(min-width: 1800px)").matches) {
+            rowHeight = 70;
+        } else if (window.matchMedia("(min-width: 1400px)").matches) {
+            rowHeight = 60;
+        } else if (window.matchMedia("(min-width: 1000px)").matches) {
+            rowHeight = 45;
+        } else if (window.matchMedia("(min-width: 600px)").matches) {
+            rowHeight = 35;
+        } else {
+            rowHeight = 20;
+        }
+
+        return rowHeight;
+    },
+
     render: function () {
         var allGadRender = [],
-            rowHeight;
+            rowHeight = this.getRowHeight();
 
         keyCounter = {
             small: 0,
@@ -163,18 +175,6 @@ var CardBlock = React.createClass({
                 <Weather />
             </div>
         );
-
-        if (window.matchMedia("(min-width: 1800px)").matches) {
-            rowHeight = 70;
-        } else if (window.matchMedia("(min-width: 1400px)").matches) {
-            rowHeight = 60;
-        } else if (window.matchMedia("(min-width: 1000px)").matches) {
-            rowHeight = 45;
-        } else if (window.matchMedia("(min-width: 600px)").matches) {
-            rowHeight = 35;
-        } else {
-            rowHeight = 20;
-        }
 
         return (
             <div style={{margin:'1% 0%'}}>

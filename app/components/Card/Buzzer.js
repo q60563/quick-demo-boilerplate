@@ -5,7 +5,7 @@ import BuzzerOffIcon from '../Icons/BuzzerOffIcon'
 var csshake = require('../../styles/csshake.css');
 
 var fgColor = "#FFF",
-    bgColor = '#357FBD',
+    bgColor = '#247BA0',
     fgColorDisabled = "#EEEEEE",
     bgColorDisabled = "#BDBDBD",
     fgColorOn = "#FFF",

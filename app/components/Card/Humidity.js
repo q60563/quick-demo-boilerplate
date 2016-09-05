@@ -1,7 +1,7 @@
 import React from 'react';
 import HumidityIcon from '../../static/humid.png';
 
-var bgColor = "#6BB9F0",
+var bgColor = "#00A8E8",
     bgColorDisabled = "#BDBDBD";
 
 const Humidity = ({enable, humid}) => {
@@ -19,7 +19,7 @@ const Humidity = ({enable, humid}) => {
             </div>
 
             <div style={{float: "left", width: "50%", height: "100%"}}>
-                <div style={{position: "absolute", top: "0", bottom: "0", left: "50%", right: "0", margin: "0", textAlign: "center", fontSize: "1.5em", lineHeight: "130px", color: "white"}}>
+                <div style={{position: "absolute", top: "30%", bottom: "0", left: "50%", right: "0", margin: "0", textAlign: "center", fontSize: "1.5em", color: "white"}}>
                     {cardValue} %
                 </div>
             </div>

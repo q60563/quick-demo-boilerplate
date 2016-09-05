@@ -10,16 +10,16 @@ const initialState = { timeLeft: {} };
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         case PERMITJOIN:
-                return {
-                    ...state,
-                    timeLeft: action.time
-                };
+            return {
+                ...state,
+                timeLeft: action.time
+            };
 
         case PERMITJOINING:
-                return {
-                    ...state,
-                    timeLeft: action.timeLeft
-                };
+            return {
+                ...state,
+                timeLeft: action.timeLeft
+            };
 
         default: 
             return state;

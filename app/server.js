@@ -118,21 +118,21 @@ var app = function () {
         });
     }, 7000);
 
-    // setInterval(function () {
-    //     attrsChangeInd('AA:BB:CC:DD:EE', {
-    //         type: 'Switch',
-    //         auxId: 'switch/0',
-    //         value: false
-    //     });
-    // }, 7000);
+    setInterval(function () {
+        attrsChangeInd('AA:BB:CC:DD:EE', {
+            type: 'Switch',
+            auxId: 'switch/0',
+            value: false
+        });
+    }, 7000);
 
-    // setInterval(function () {
-    //     toastInd('Test');
-    // }, 8000);
+    setInterval(function () {
+        toastInd('Test');
+    }, 8000);
 
     setInterval(function () {
         devStatusInd('AA:BB:CC:DD:EE', 'offline');
-    }, 10000);
+    }, 15000);
 };
 
 /**********************************/
@@ -171,7 +171,7 @@ function devStatusInd (permAddr, status) {
 
 function attrsChangeInd (permAddr, gad) {
     ioServer.sendInd('attrsChange', { permAddr: permAddr, gad: gad });
-    console.log(chalk.blue('[   attrsChange ] ') + '@' + permAddr + ', ' + JSON.stringify(gad));
+    console.log(chalk.blue('[   attrsChange ] ') + '@' + permAddr + ', auxId: ' + gad.auxId + ', value: ' + gad.value);
 }
 
 function toastInd (msg) {

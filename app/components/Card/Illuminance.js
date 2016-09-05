@@ -1,6 +1,6 @@
 import React from 'react';
 
-var bgColor = "#F4B350",
+var bgColor = "#EB974E",
     bgColorDisabled = "#BDBDBD";
 
 const Illuminance = ({enable, lux}) => {
@@ -21,7 +21,7 @@ const Illuminance = ({enable, lux}) => {
             </div>
 
             <div style={{float: "left", width: "50%", height: "100%"}}>
-                <div style={{position: "absolute", top: "0", bottom: "0", left: "50%", right: "0", margin: "0", textAlign: "center", fontSize: "1.5em", lineHeight: "130px", color: "white"}}>
+                <div style={{position: "absolute", top: "30%", bottom: "0", left: "50%", right: "0", margin: "0", textAlign: "center", fontSize: "1.5em", color: "white"}}>
                     {cardValue} lx
                 </div>
             </div>

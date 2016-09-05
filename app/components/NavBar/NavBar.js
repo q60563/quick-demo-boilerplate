@@ -18,16 +18,17 @@ var NavBar = React.createClass({
     render: function () {
         let permitTimeLeft = this.props.timeLeft;
         let iconRight = (permitTimeLeft !== 0 && !_.isObject(permitTimeLeft)) ?
-                    <LinearProgress style={{position: "absolute", top: "50%", bottom: "0", left: "85%", right: "0", margin: "0", width: '120px'}} color='#F4B350' mode="determinate" max={60} value={permitTimeLeft}/> : 
+                    <LinearProgress style={{position: "absolute", top: "50%", bottom: "0", left: "85%", right: "0", margin: "0", width: '120px'}} color='#F2784B' mode="determinate" max={60} value={permitTimeLeft}/> : 
                     <FlatButton style={{position: "absolute", top: "10%", bottom: "0", left: "85%", right: "0", margin: "0", fontFamily: 'Lato'}} label="Permit join" onClick={this.onClickCallback()}/>;
 
         return (
             <div>
                 <AppBar
                     title={this.props.title}
-                    titleStyle={{fontFamily: 'Lato', textAlign: 'center'}}
+                    titleStyle={{fontFamily: 'Lato', fontWeight:'bold', textAlign: 'center'}}
                     iconElementLeft={<div/>}
                     iconElementRight = {iconRight}
+                    style={{backgroundColor: '#2C3E50'}}
                 />
                 
             </div>

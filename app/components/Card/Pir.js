@@ -5,7 +5,7 @@ import PirTriggeredIcon from '../Icons/PirTriggeredIcon'
 var csshake = require('../../styles/csshake.css');
 
 var fgColor = "#FFF",
-    bgColor = '#F4D830',
+    bgColor = '#ACF990',
     fgColorDisabled = "#EEEEEE",
     bgColorDisabled = "#BDBDBD",
     fgColorOn = "#FFF",

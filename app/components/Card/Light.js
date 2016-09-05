@@ -3,7 +3,7 @@ import LightOnIcon from '../Icons/LightOnIcon'
 import LightOffIcon from '../Icons/LightOffIcon'
 
 var fgColor = "#FFF",
-    bgColor = '#F89D24',
+    bgColor = '#FFB770',
     fgColorDisabled = "#EEEEEE",
     bgColorDisabled = "#BDBDBD",
     fgColorOn = "#FFF",

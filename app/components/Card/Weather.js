@@ -27,17 +27,21 @@ const WeatherCard = React.createClass({
         let tempMax = this.props.weather.main.temp_max ? this.props.weather.main.temp_max.toFixed(1) : undefined;
 
         return (
-            <div style={{width: '100%', height: '100%', backgroundColor: '#99bbff'}}>
-                <div style={{float: 'left', width: '45%', color: 'white', padding: '10% 0% 10% 10%'}}>
-                    <div style={{fontSize: '1em'}}>{desc}</div>
-                    <div style={{fontSize: '1.2em', fontWeight:'bolder', margin:'30% 0% 30% 10%'}}>{temp}°</div>
-                    <div style={{fontSize: '1em'}}>{name}</div>
+            <div style={{width: '100%', height: '100%', backgroundColor: '#5BC0EB'}}>
+                <div style={{float: 'left', width: '50%', height: '100%', color: 'white'}}>
+                    <div style={{position: 'relative', transform: 'translateY(-50%)', top: '45%', margin: "0% auto", width: '60%'}}>
+                        <div style={{fontSize: '1em'}}>{desc}</div>
+                        <div style={{fontSize: '1.2em', margin:'50% 0%', textAlign: "center"}}>{temp}°</div>
+                        <div style={{fontSize: '1em'}}>{name}</div>
+                    </div>
                 </div>
 
-                <div style={{float: 'left', width: '45%', padding: '10% 0%'}}>
-                    <div style={{width: '100%', height: '30%'}}>{weatherIcon}</div>
-                    <div style={{fontSize: '1em', fontWeight:'bold', color: '#C5EFF7', margin:'5% 0% 20% 15%'}}>{tempMin}°</div>
-                    <div style={{fontSize: '1em', fontWeight:'bold', color: '#F1A9A0', margin:'10% 0% 20% 15%'}}>{tempMax}°</div>
+                <div style={{float: 'left', width: '50%', height: '100%'}}>
+                    <div style={{position: 'relative', transform: 'translateY(-50%)', top: '45%', margin: "0% auto", width: '80%'}}>
+                        <div style={{width: '100%', height: '30%'}}>{weatherIcon}</div>
+                        <div style={{fontSize: '1em', color: '#C5EFF7', margin:'5% 0% 20%', textAlign: "center"}}>{tempMin}°</div>
+                        <div style={{fontSize: '1em', color: '#D64541', textAlign: "center"}}>{tempMax}°</div>
+                    </div>
                 </div>
             </div>
         );
