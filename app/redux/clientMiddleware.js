@@ -11,9 +11,9 @@ const clientMiddleware = store => next => action => {
     switch (action.type) {
 // navBar
         case PERMITJOIN:
-            ioClient.sendReq('permitJoin', { time: action.time }, function (status, data) {
-                if (status === 0) {
-                    console.log('error');
+            ioClient.sendReq('permitJoin', { time: action.time }, function (err, data) {
+                if (err) {
+                    console.log(err);
                 } else {
                     next(action);    
                 } 
@@ -22,10 +22,11 @@ const clientMiddleware = store => next => action => {
 
 // cardBlork
         case GETDEVS:
-            ioClient.sendReq('getDevs', {}, function (status, data) {
-                if (status === 0) {
-                    console.log('error');
+            ioClient.sendReq('getDevs', {}, function (err, data) {
+                if (err) {
+                    console.log(err);
                 } else {
+console.log(data);
                     action.devs = data;
                     next(action);    
                 } 
@@ -33,9 +34,9 @@ const clientMiddleware = store => next => action => {
             break;
 
         case WRITE:
-            ioClient.sendReq('write', { permAddr: action.permAddr, auxId: action.auxId, value: action.value }, function (status, data) {
-                if (status === 0) {
-                    console.log('error');
+            ioClient.sendReq('write', { permAddr: action.permAddr, auxId: action.auxId, value: action.value }, function (err, data) {
+                if (err) {
+                    console.log(err);
                 } else {
                     next(action);    
                 } 

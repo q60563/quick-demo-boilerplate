@@ -1,5 +1,4 @@
 var http = require('http'); 
-
 var chalk = require('chalk');
 
 var ioServer = require('./helpers/ioServer');
@@ -8,6 +7,68 @@ var server = http.createServer();
 server.listen(3030);
 
 ioServer.start(server);
+
+var app = function () {
+/**********************************/
+/* show Welcome Msg               */
+/**********************************/
+    showWelcomeMsg();
+
+/**********************************/
+/* set Leave Msg                  */
+/**********************************/
+    setLeaveMsg();
+
+/**********************************/
+/* start shepherd                 */
+/**********************************/
+// start your shepherd
+
+/************************/
+/* regReqHdlr handler   */
+/************************/
+    ioServer.regReqHdlr('getDevs', function (args, cb) { 
+        // register your req handler
+        // cb(err, data);
+        // cb(null, { 
+        //     'AA:BB:CC:DD:FF': {
+        //         permAddr: 'AA:BB:CC:DD:FF',
+        //         status: 'online',
+        //         gads: { 
+        //             'illu/0': {
+        //                 type: 'Illuminance',
+        //                 auxId: 'illu/0',
+        //                 value: '108'
+        //             },
+        //             'buzzer/0': {
+        //                 type: 'Buzzer',
+        //                 auxId: 'buzzer/0',
+        //                 value: true
+        //             },
+        //             'flame/0': {
+        //                 type: 'Flame',
+        //                 auxId: 'flame/0',
+        //                 value: true
+        //             },
+        //             'pir/0': {
+        //                 type: 'Pir',
+        //                 auxId: 'pir/0',
+        //                 value: true
+        //             }
+        //         }
+        //     }
+        // });
+    });
+
+    ioServer.regReqHdlr('permitJoin', function (args, cb) { 
+        // register your req handler
+        // cb(err, data);
+    });
+
+    ioServer.regReqHdlr('write', function (args, cb) { 
+        // register your req handler
+        // cb(err, data);
+    });
 
 /************************/
 /* Event handle         */
@@ -30,28 +91,9 @@ ioServer.start(server);
 /*** attrsChange      ***/
 // attrsChangeInd(permAddr, data);
 
-/**********************************/
-/* start shepherd                 */
-/**********************************/
-var app = function () {
-// start shepherd
 /************************/
-/* regReqHdlr handle    */
+/* fake Indication      */
 /************************/
-    ioServer.regReqHdlr('getDevs', function (args, cb) { 
-        console.log(args); 
-    });
-
-    ioServer.regReqHdlr('permitJoin', function (args, cb) { 
-        console.log(args); 
-    });
-
-    ioServer.regReqHdlr('write', function (args, cb) { 
-        console.log(args); 
-    });
-    
-// cb(status, date)
-
     setInterval(function () {
         devIncomingInd({
             permAddr: 'AA:BB:CC:DD:EE',
@@ -79,35 +121,6 @@ var app = function () {
                 } 
             }
         });
-    }, 4000);
-
-    setInterval(function () {
-        devIncomingInd({
-            permAddr: 'AA:BB:CC:DD:FF',
-            status: 'online',
-            gads: { 
-                'illu/0': {
-                    type: 'Illuminance',
-                    auxId: 'illu/0',
-                    value: '108'
-                },
-                'buzzer/0': {
-                    type: 'Buzzer',
-                    auxId: 'buzzer/0',
-                    value: true
-                },
-                'flame/0': {
-                    type: 'Flame',
-                    auxId: 'flame/0',
-                    value: true
-                },
-                'pir/0': {
-                    type: 'Pir',
-                    auxId: 'pir/0',
-                    value: true
-                }
-            }
-        });
     }, 5000);
 
     setInterval(function () {
@@ -133,10 +146,80 @@ var app = function () {
     setInterval(function () {
         devStatusInd('AA:BB:CC:DD:EE', 'offline');
     }, 15000);
+
 };
 
+
 /**********************************/
-/* chalk funciton                 */
+/* welcome function               */
+/**********************************/
+function showWelcomeMsg() {
+var blePart1 = chalk.blue('       ___   __    ____      ____ __ __ ____ ___   __ __ ____ ___   ___ '),
+    blePart2 = chalk.blue('      / _ ) / /   / __/____ / __// // // __// _ \\ / // // __// _ \\ / _ \\'),
+    blePart3 = chalk.blue('     / _  |/ /__ / _/ /___/_\\ \\ / _  // _/ / ___// _  // _/ / , _// // /'),
+    blePart4 = chalk.blue('    /____//____//___/     /___//_//_//___//_/   /_//_//___//_/|_|/____/ ');
+
+var zbPart1 = chalk.blue('      ____   ____ _____ ___   ____ ____        ____ __ __ ____ ___   __ __ ____ ___   ___ '),
+    zbPart2 = chalk.blue('     /_  /  /  _// ___// _ ) / __// __/ ____  / __// // // __// _ \\ / // // __// _ \\ / _ \\'),
+    zbPart3 = chalk.blue('      / /_ _/ / / (_ // _  |/ _/ / _/  /___/ _\\ \\ / _  // _/ / ___// _  // _/ / , _// // /'),
+    zbPart4 = chalk.blue('     /___//___/ \\___//____//___//___/       /___//_//_//___//_/   /_//_//___//_/|_|/____/');
+
+var mqttPart1 = chalk.blue('      __  ___ ____  ______ ______        ____ __ __ ____ ___   __ __ ____ ___   ___ '),
+    mqttPart2 = chalk.blue('     /  |/  // __ \\/_  __//_  __/ ____  / __// // // __// _ \\ / // // __// _ \\ / _ \\'),
+    mqttPart3 = chalk.blue('    / /|_/ // /_/ / / /    / /   /___/ _\\ \\ / _  // _/ / ___// _  // _/ / , _// // /'),
+    mqttPart4 = chalk.blue('   /_/  /_/ \\___\\_\\/_/    /_/         /___//_//_//___//_/   /_//_//___//_/|_|/____/ ');
+
+var coapPart1 = chalk.blue('     _____ ____   ___    ___          ____ __ __ ____ ___   __ __ ____ ___   ___ '),
+    coapPart2 = chalk.blue('    / ___// __ \\ / _ |  / _ \\  ____  / __// // // __// _ \\ / // // __// _ \\ / _ \\'),
+    coapPart3 = chalk.blue('   / /__ / /_/ // __ | / ___/ /___/ _\\ \\ / _  // _/ / ___// _  // _/ / , _// // /'),
+    coapPart4 = chalk.blue('   \\___/ \\____//_/ |_|/_/          /___//_//_//___//_/   /_//_//___//_/|_|/____/ ');
+
+    console.log('');
+    console.log('');
+    console.log('Welcome to ble-shepherd webapp... ');
+    console.log('');
+    console.log(blePart1);
+    console.log(blePart2);
+    console.log(blePart3);
+    console.log(blePart4);
+    console.log(chalk.gray('         A network server and manager for the BLE machine network'));
+    console.log('');
+    console.log('   >>> Author:     Hedy Wang (hedywings@gmail.com)');
+    console.log('   >>> Version:    ble-shepherd v1.0.0');
+    console.log('   >>> Document:   https://github.com/bluetoother/ble-shepherd');
+    console.log('   >>> Copyright (c) 2016 Hedy Wang, The MIT License (MIT)');
+    console.log('');
+    console.log('The server is up and running, press Ctrl+C to stop server.');
+    console.log('');
+    console.log('---------------------------------------------------------------');
+}
+
+/**********************************/
+/* goodBye function               */
+/**********************************/
+function setLeaveMsg() {
+    process.stdin.resume();
+
+    function showLeaveMessage() {
+        console.log(' ');
+        console.log(chalk.blue('      _____              __      __                  '));
+        console.log(chalk.blue('     / ___/ __  ___  ___/ /____ / /  __ __ ___       '));
+        console.log(chalk.blue('    / (_ // _ \\/ _ \\/ _  //___// _ \\/ // // -_)   '));
+        console.log(chalk.blue('    \\___/ \\___/\\___/\\_,_/     /_.__/\\_, / \\__/ '));
+        console.log(chalk.blue('                                   /___/             '));
+        console.log(' ');
+        console.log('    >>> This is a simple demonstration of how the shepherd works.');
+        console.log('    >>> Please visit the link to know more about this project:   ');
+        console.log('    >>>   ' + chalk.yellow('https://github.com/zigbeer/zigbee-shepherd'));
+        console.log(' ');
+        process.exit();
+    }
+
+    process.on('SIGINT', showLeaveMessage);
+}
+
+/**********************************/
+/* Indication funciton            */
 /**********************************/
 function readyInd () {
     ioServer.sendInd('ready', {});

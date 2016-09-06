@@ -1,18 +1,14 @@
-var express = require('express'),
-    webpack = require('webpack'),
-    webpackMiddleware = require('webpack-dev-middleware'),
-    webpackHotMiddleware = require('webpack-hot-middleware');
+var express = require('express');
 
-var config = require('./webpack.config'),
-    shepherdApp = require('./app/server');
-    
-var isDeveloping = process.env.NODE_ENV !== 'production',
-    port = isDeveloping ? 3000 : process.env.PORT,
+var shepherdApp = require('./app/server'),
+    isDeveloping = process.env.NODE_ENV !== 'production',
+    port = 3000,        // isDeveloping ? 3000 : process.env.PORT
     app = express();
 
 if (isDeveloping) {
-    var compiler = webpack(config),
-        middleware = webpackMiddleware(compiler, {
+    var config = require('./webpack.config'),
+        compiler = require('webpack')(config),
+        middleware = require('webpack-dev-middleware')(compiler, {
         publicPath: config.output.publicPath,
         contentBase: 'src',
         stats: {
@@ -26,12 +22,11 @@ if (isDeveloping) {
     });
 
     app.use(middleware);
-    app.use(webpackHotMiddleware(compiler));
+    app.use(require('webpack-hot-middleware')(compiler));
     app.get('*', function response(req, res) {
         res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'build/index.html')));
         res.end();
     });
-
 } else {
     app.use(express.static(__dirname + '/build'));
     app.get('*', function response(req, res) {

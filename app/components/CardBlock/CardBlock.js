@@ -37,8 +37,6 @@ var CardBlock = React.createClass({
                 cardProps.key = 'smallCard' + keyCounter.small;
                 keyCounter.small += 1;
 
-
-
                 if (layoutDataGrids.smallCard.length > 0) 
                     cardProps.dataGrid = layoutDataGrids.smallCard.splice(-(layoutDataGrids.smallCard.length), 1)[0];
                 else 
