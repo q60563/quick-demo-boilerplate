@@ -11,25 +11,28 @@ const clientMiddleware = store => next => action => {
     switch (action.type) {
 // navBar
         case PERMITJOIN:
-            ioClient.sendReq('permitJoin', { time: action.time }, function (err, data) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    next(action);    
-                } 
+            ioConnectedDelay(function () {
+                ioClient.sendReq('permitJoin', { time: action.time }, function (err, data) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        next(action);    
+                    } 
+                });
             });
             break;
 
 // cardBlork
         case GETDEVS:
-            ioClient.sendReq('getDevs', {}, function (err, data) {
-                if (err) {
-                    console.log(err);
-                } else {
-console.log(data);
-                    action.devs = data;
-                    next(action);    
-                } 
+            ioConnectedDelay(function () {
+                ioClient.sendReq('getDevs', {}, function (err, data) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        action.devs = data;
+                        next(action);    
+                    } 
+                });
             });
             break;
 
@@ -63,5 +66,15 @@ console.log(data);
             break;
     }
 };
+
+function ioConnectedDelay (callback) {
+    if (ioClient._connected) {
+        callback();
+    } else {
+        setTimeout(function () {
+            ioConnectedDelay(callback);
+        }, 1000)
+    }
+}
 
 export default clientMiddleware;

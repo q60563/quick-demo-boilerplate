@@ -30,6 +30,7 @@ var app = function () {
     ioServer.regReqHdlr('getDevs', function (args, cb) { 
         // register your req handler
         // cb(err, data);
+        // example:
         // cb(null, { 
         //     'AA:BB:CC:DD:FF': {
         //         permAddr: 'AA:BB:CC:DD:FF',
@@ -128,14 +129,6 @@ var app = function () {
             type: 'Temperature',
             auxId: 'temp/0',
             value: '22'
-        });
-    }, 7000);
-
-    setInterval(function () {
-        attrsChangeInd('AA:BB:CC:DD:EE', {
-            type: 'Switch',
-            auxId: 'switch/0',
-            value: false
         });
     }, 7000);
 
