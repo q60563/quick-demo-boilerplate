@@ -284,23 +284,23 @@ The ioClient will fire event when receiving an indication from socket.io server 
 <a name="Response"></a>
 ### Response
     
-| Response Type | Data                                                 | Data Description                                    |
-|---------------|------------------------------------------------------|-----------------------------------------------------|
-| getDevs       | { devs: [devInfo](#devInfo)[] }                      | Array of device information objects                 |
-| permitJoin    | {}                                                   | Response contains no data                           |
-| write         | { permaddr: String, auxId: Depends, value: Depends } | Device information and the written value of device. |
+| Response Type | Data                                                 | Data Description                                                                     |
+|---------------|------------------------------------------------------|--------------------------------------------------------------------------------------|
+| getDevs       | { xx:xx:xx: [devInfo](#devInfo), ... }               | Object of device information objects, the key of object is device permanent address. |
+| permitJoin    | {}                                                   | Response contains no data.                                                           |
+| write         | { permaddr: String, auxId: Depends, value: Depends } | Device information and the written value of device.                                  |
 
 <a name="Indication"></a>
 ### Indication
 
-| Indication Type | Message                              | Description                                                         |
-|-----------------|--------------------------------------|---------------------------------------------------------------------|
-| ready           | {}                                   | Shepherd is ready                                                   |
-| permitJoining   | { timeLeft: Number }                 | Shepherd is now allowing or disallowing devices to join the network |
-| devIncoming     | { [devInfo](#devInfo) }              | A new device is incoming                                            |
-| devStatus       | { permAddr: String, status: String } | Status of a device has changed                                      |
-| attrsChange     | { permAddr: String, GadInfo }        | Attribue(s) on a device has changed                                 |
-| toast           | { msg: String }                      |                                                                     |
+| Indication Type | Message                                        | Description                                                         |
+|-----------------|------------------------------------------------|---------------------------------------------------------------------|
+| ready           | {}                                             | Shepherd is ready                                                   |
+| permitJoining   | { timeLeft: Number }                           | Shepherd is now allowing or disallowing devices to join the network |
+| devIncoming     | { dev: [devInfo](#devInfo) }                   | A new device is incoming                                            |
+| devStatus       | { permAddr: String, status: String }           | Status of a device has changed                                      |
+| attrsChange     | { permAddr: String, gad: [gadInfo](#gadInfo) } | Attribue(s) on a device has changed                                 |
+| toast           | { msg: String }                                |                                                                     |
 
 
 <br />
@@ -313,11 +313,11 @@ The ioClient will fire event when receiving an indication from socket.io server 
 
     - Properties
 
-    | Property | Type   | Description                                                     |
-    |----------|--------|-----------------------------------------------------------------|
-    | permAddr | String | Device permanent addresses.                                     |
-    | Status   | String | Device status.                                                  |
-    | gads     | Array  | A list of [gadget informations](#gadInfo) that this device owns |
+    | Property | Type   | Description                                                                                                                          |
+    |----------|--------|--------------------------------------------------------------------------------------------------------------------------------------|
+    | permAddr | String | Device permanent addresses.                                                                                                          |
+    | status   | String | Device status.                                                                                                                       |
+    | gads     | Object | An object gathered all gadgets information. The key of object is gadget's auxiliary address, value of object is [gadInfo](#gadInfo). |
 
 <a name="gadInfo"></a>
 - Gadget Information (gadInfo) Object
