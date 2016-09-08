@@ -24,9 +24,9 @@ var app = function () {
 /**********************************/
 // start your shepherd
 
-/************************/
-/* regReqHdlr handler   */
-/************************/
+/**********************************/
+/* register Req handler           */
+/**********************************/
     ioServer.regReqHdlr('getDevs', function (args, cb) { 
         // register your req handler
         // cb(err, data);
@@ -69,6 +69,7 @@ var app = function () {
     ioServer.regReqHdlr('write', function (args, cb) { 
         // register your req handler
         // cb(err, data);
+        cb(null, false);
     });
 
 /************************/

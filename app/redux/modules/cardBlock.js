@@ -19,7 +19,25 @@ export default function reducer(state = initialState, action) {
             };
 
         case WRITE:
-            return state;
+            if (!state.devs || !state.devs[action.permAddr] || !state.devs[action.permAddr].gads || !state.devs[action.permAddr].gads[action.auxId]) 
+                return state;
+            else 
+                return {
+                    ...state,
+                    devs: {
+                        ...state.devs,
+                        [action.permAddr]: {
+                            ...state.devs[action.permAddr],
+                            gads: {
+                                ...state.devs[action.permAddr].gads,
+                                [action.auxId]: {
+                                    ...state.devs[action.permAddr].gads[action.auxId],
+                                    value: action.value
+                                }
+                            }
+                        }
+                    }
+                };
 
         case DEVINCOMING:
             return {
