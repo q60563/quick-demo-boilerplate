@@ -31,39 +31,40 @@ var app = function () {
         // register your req handler
         // cb(err, data);
         // example:
-        // cb(null, { 
-        //     'AA:BB:CC:DD:FF': {
-        //         permAddr: 'AA:BB:CC:DD:FF',
-        //         status: 'online',
-        //         gads: { 
-        //             'illu/0': {
-        //                 type: 'Illuminance',
-        //                 auxId: 'illu/0',
-        //                 value: '108'
-        //             },
-        //             'buzzer/0': {
-        //                 type: 'Buzzer',
-        //                 auxId: 'buzzer/0',
-        //                 value: true
-        //             },
-        //             'flame/0': {
-        //                 type: 'Flame',
-        //                 auxId: 'flame/0',
-        //                 value: true
-        //             },
-        //             'pir/0': {
-        //                 type: 'Pir',
-        //                 auxId: 'pir/0',
-        //                 value: true
-        //             }
-        //         }
-        //     }
-        // });
+        cb(null, { 
+            'AA:BB:CC:DD:FF': {
+                permAddr: 'AA:BB:CC:DD:FF',
+                status: 'online',
+                gads: { 
+                    'illu/0': {
+                        type: 'Illuminance',
+                        auxId: 'illu/0',
+                        value: '108'
+                    },
+                    'buzzer/0': {
+                        type: 'Buzzer',
+                        auxId: 'buzzer/0',
+                        value: true
+                    },
+                    'flame/0': {
+                        type: 'Flame',
+                        auxId: 'flame/0',
+                        value: true
+                    },
+                    'pir/0': {
+                        type: 'Pir',
+                        auxId: 'pir/0',
+                        value: true
+                    }
+                }
+            }
+        });
     });
 
     ioServer.regReqHdlr('permitJoin', function (args, cb) { 
         // register your req handler
         // cb(err, data);
+        cb(null, null);
     });
 
     ioServer.regReqHdlr('write', function (args, cb) { 
