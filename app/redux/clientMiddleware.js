@@ -99,7 +99,7 @@ function getCityAndWeather(lat, lon, callback) {
         if (err) {
             callback(err);
         } else {
-            results.city = JSON.parse(rsp.text).results[0].address_components[4].short_name;
+            results.city = JSON.parse(rsp.text).results[0].address_components[4].short_name.split(' ')[0];
             
             request.get(getWeatherUrl).end(function (err, rsp) {
                 if (err) {

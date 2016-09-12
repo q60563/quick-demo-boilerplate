@@ -49,7 +49,7 @@ var app = function () {
                     'flame/0': {
                         type: 'Flame',
                         auxId: 'flame/0',
-                        value: true
+                        value: false
                     },
                     'pir/0': {
                         type: 'Pir',

@@ -1,6 +1,6 @@
 import React from 'react';
 
-var bgColor = "#EB974E",
+var bgColor = "#CDDC39",
     bgColorDisabled = "#BDBDBD";
 
 const Illuminance = ({enable, lux}) => {

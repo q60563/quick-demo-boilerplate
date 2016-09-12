@@ -1,6 +1,6 @@
 import React from 'react';
 
-var bgColor = "#FF1654",
+var bgColor = "#F5D76E",
     bgColorDisabled = "#BDBDBD";
 
 const Temperature = ({enable, temp}) => {

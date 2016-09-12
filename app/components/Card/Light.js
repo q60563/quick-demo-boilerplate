@@ -3,10 +3,10 @@ import LightOnIcon from '../Icons/LightOnIcon'
 import LightOffIcon from '../Icons/LightOffIcon'
 
 var fgColor = "#FFF",
-    bgColor = '#FFB770',
+    bgColor = '#6C7A89',
     fgColorDisabled = "#EEEEEE",
     bgColorDisabled = "#BDBDBD",
-    fgColorOn = "#FFF",
+    fgColorOn = "#f9ffa8",
     fgColorOff = "#FFF";
 
 const Light = ({ enable, onOff, onClick }) => {
