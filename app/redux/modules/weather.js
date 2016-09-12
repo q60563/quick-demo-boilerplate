@@ -5,7 +5,8 @@ const initialState = {
         info: {
             weather: [{}],
             main: {}
-        } 
+        },
+        city: '' 
     };
 
 // Reducer
@@ -14,7 +15,8 @@ export default function reducer(state = initialState, action) {
         case GETWEATHER:
             return {
                 ...state,
-                info: action.weather
+                info: action.weather,
+                city: action.city
             };
 
         default:

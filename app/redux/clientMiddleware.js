@@ -48,17 +48,28 @@ const clientMiddleware = store => next => action => {
 
 // weather
         case GETWEATHER:
-            var url = 'http://api.openweathermap.org/data/2.5/weather?lat=' + action.lat + 
-                      '&lon=' + action.lon + '&units=metric&appid=ca57f9dc62e223f3f10d001470edd6cc';
-
-            request.get(url).end(function (err, rsp) {
+            function callback(err, results) {
                 if (err) {
-                    console.log('error');
+                    console.log(err);
                 } else {
-                    action.weather = JSON.parse(rsp.text);
-                    next(action);    
-                } 
-            });
+                    action.weather = results.weather;
+                    action.city = results.city;
+                    next(action);  
+                }
+            }
+
+            if (navigator.geolocation) {     
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    getCityAndWeather(position.coords.latitude, position.coords.longitude, callback);
+                }, function () {
+                    console.log('Can not get geolocation.');
+                    getCityAndWeather(action.lat, action.lon, callback);
+                });       
+            } else {  
+                console.log('Can not get geolocation.');
+                getCityAndWeather(action.lat, action.lon, callback);
+            }
+
             break;
 
         default:
@@ -73,8 +84,33 @@ function ioConnectedDelay (callback) {
     } else {
         setTimeout(function () {
             ioConnectedDelay(callback);
-        }, 1000)
+        }, 1000);
     }
+}
+
+function getCityAndWeather(lat, lon, callback) {
+    var getCityUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + 
+            ',' + lon + '&language=EN&key=AIzaSyBUxTIZNL7SId1f3A5Yc3vWSUgDmLspEGs',
+        getWeatherUrl = 'http://api.openweathermap.org/data/2.5/weather?lat=' + lat + 
+            '&lon=' + lon + '&units=metric&appid=ca57f9dc62e223f3f10d001470edd6cc',
+        results = {};
+
+    request.get(getCityUrl).end(function (err, rsp) {
+        if (err) {
+            callback(err);
+        } else {
+            results.city = JSON.parse(rsp.text).results[0].address_components[4].short_name;
+            
+            request.get(getWeatherUrl).end(function (err, rsp) {
+                if (err) {
+                    callback(err);
+                } else {
+                    results.weather = JSON.parse(rsp.text);
+                    callback(null, results);
+                } 
+            });   
+        } 
+    });
 }
 
 export default clientMiddleware;

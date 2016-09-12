@@ -144,16 +144,16 @@ var CardBlock = React.createClass({
 
         layoutDataGrids = {
             smallCard: [
-                {x: 5, y: 1, w: 1, h: 2},
+                {x: 4, y: 0, w: 1, h: 2},
+                {x: 4, y: 1, w: 1, h: 2},
+                {x: 4, y: 2, w: 1, h: 2},
                 {x: 5, y: 2, w: 1, h: 2},
-                {x: 6, y: 2, w: 1, h: 2},
-                {x: 4, y: 3, w: 1, h: 2},
-                {x: 6, y: 3, w: 1, h: 2}
+                {x: 6, y: 2, w: 1, h: 2}
             ],
             bigCard: [
-                {x: 4, y: 0, w: 2, h: 2},
-                {x: 3, y: 1, w: 2, h: 2},
-                {x: 3, y: 2, w: 2, h: 2}
+                {x: 2, y: 0, w: 2, h: 2},
+                {x: 2, y: 1, w: 2, h: 2},
+                {x: 2, y: 2, w: 2, h: 2}
             ]
         };
 
@@ -169,14 +169,14 @@ var CardBlock = React.createClass({
         }
 
         allGadRender.push(
-            <div key='Weather' data-grid={{x: 6, y: 0, w: 2, h: 4}}>
+            <div key='Weather' data-grid={{x: 5, y: 0, w: 2, h: 4}}>
                 <Weather />
             </div>
         );
 
         return (
             <div style={{margin:'1% 0%'}}>
-                <ReactGridLayout rowHeight={rowHeight} isDraggable={false}>
+                <ReactGridLayout cols={9} rowHeight={rowHeight} isDraggable={false}>
                     {allGadRender}
                 </ReactGridLayout>
             </div>
