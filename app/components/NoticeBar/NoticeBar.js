@@ -22,7 +22,7 @@ var Notice = React.createClass({
                     message={this.props.message}
                     autoHideDuration={3000}
                     onRequestClose={this.handleRequestClose}
-                    bodyStyle={{fontFamily: 'Lato'}}
+                    bodyStyle={{fontFamily: 'Lato', fontSize: '2em', fontWeight:'bold'}}
                 />
             </div>
         );

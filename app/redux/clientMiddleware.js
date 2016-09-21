@@ -52,9 +52,14 @@ const clientMiddleware = store => next => action => {
                 if (err) {
                     console.log(err);
                 } else {
-                    action.weather = results.weather;
-                    action.city = results.city;
-                    next(action);  
+                    if (results.weather.cod == '404') {
+                        action.notfound = true;
+                    } else {
+                        action.weather = results.weather;
+                        action.city = results.city;
+                    }
+
+                    next(action);
                 }
             }
 

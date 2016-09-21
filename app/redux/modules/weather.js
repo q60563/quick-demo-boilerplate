@@ -13,6 +13,9 @@ const initialState = {
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         case GETWEATHER:
+            if (action.notfound) 
+                return state;
+
             return {
                 ...state,
                 info: action.weather,
