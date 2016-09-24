@@ -22,7 +22,7 @@ import NoticeBar from './components/NoticeBar/NoticeBar';
 /* client app                                */
 /*********************************************/
 var store = createStore(reducer, applyMiddleware(clientMiddleware)),
-    title = 'coap-shepherd';
+    title = 'MQTT Shepherd Simple WebApp';
 
 ioClient.start('http://' + window.location.hostname + ':3030');
 

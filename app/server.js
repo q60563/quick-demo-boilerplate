@@ -1,188 +1,244 @@
 var http = require('http'); 
 var chalk = require('chalk');
+var MqttShepherd = require('mqtt-shepherd');
+var _ = require('busyman');
 
+var model = require('./model/model');
 var ioServer = require('./helpers/ioServer');
 var server = http.createServer();
+var qserver = new MqttShepherd();
 
 server.listen(3030);
-
 ioServer.start(server);
 
-var app = function () {
-/**********************************/
-/* show Welcome Msg               */
-/**********************************/
-    showWelcomeMsg();
+qserver.start(function (err) {
+    if (!err)
+        showWelcomeMsg();
+    else
+        console.log(err);
+});
 
-/**********************************/
-/* set Leave Msg                  */
-/**********************************/
+var isDemoRunning = false;
+var isPolling = false;
+
+var startDemoApp = function () {
+    isDemoRunning = true;
+    var qnode1 = model.qnode1,
+        qnode2 = model.qnode2,
+        qnode3 = model.qnode3,
+        qnode4 = model.qnode4;
+
+    setTimeout(function () {
+        toastInd('Device d01 will join the network');
+        setTimeout(function () {
+            qnode1.connect('mqtt://localhost', function () {});
+        }, 3000);
+    }, 100);
+
+    setTimeout(function () {
+        toastInd('Device d02 will join the network');
+        setTimeout(function () {
+            qnode2.connect('mqtt://localhost', function () {});
+        }, 3000);
+    }, 3500);
+
+    setTimeout(function () {
+        toastInd('Device d03 will join the network');
+        setTimeout(function () {
+            qnode3.connect('mqtt://localhost', function () {});
+        }, 3000);
+    }, 6000);
+
+    setTimeout(function () {
+        toastInd('Device d04 will join the network');
+        setTimeout(function () {
+            qnode4.connect('mqtt://localhost', function () {});
+        }, 3000);
+    }, 7000);
+
+    setTimeout(function () {
+        toastInd('You can click on a lamp or a buzzer');
+    }, 11000);
+
+    setTimeout(function () {
+        toastInd('User will turn on the light switch');
+
+    }, 17000);
+
+    setTimeout(function () {
+        toastInd('Illumination is less than 50 lux, light would be turned on');
+
+    }, 29000);
+
+    setTimeout(function () {
+        toastInd('PIR sensed someone walking around, light would be turned on');
+
+    }, 41000);
+
+    setTimeout(function () {
+        toastInd('Flame sensor detect the presence of a flame or fire, buzzer would be turned on');
+    }, 53000);
+};
+
+var validGads = [ 'temperature', 'humidity', 'illuminance', 'onOffSwitch', 'buzzer', 'lightCtrl', 'presence', 'dOut' ];
+
+function getDevInfo(clientId) {
+    var qnode = qserver.find(clientId);
+    if (!qnode)
+        return;
+    var permAddr = qnode.mac + '#' + qnode.clientId;
+    var dumped = qnode.dump(),
+        dev = {
+            permAddr: permAddr,
+            status: qnode.status,
+            gads: {}
+        };
+
+    validGads.forEach(function (name) {
+        if (dumped.so[name]) {
+            _.forEach(dumped.so[name], function (gad, iid) {
+                var auxId = name + '/' + iid,
+                    type = getGadType(name, gad.appType),
+                    val = getGadValue(qnode, name, iid);
+
+                dev.gads[auxId] = {
+                    type: type,
+                    auxId: auxId,
+                    value: val
+                };
+            });
+        }
+    });
+
+    return dev;
+}
+
+var app = function () {
     setLeaveMsg();
 
-/**********************************/
-/* start shepherd                 */
-/**********************************/
-// start your shepherd
-
-/**********************************/
-/* register Req handler           */
-/**********************************/
     ioServer.regReqHdlr('getDevs', function (args, cb) { 
-        // register your req handler
-        // cb(err, data);
-        // example:
-        cb(null, { 
-            'AA:BB:CC:DD:FF': {
-                permAddr: 'AA:BB:CC:DD:FF',
-                status: 'online',
-                gads: { 
-                    'illu/0': {
-                        type: 'Illuminance',
-                        auxId: 'illu/0',
-                        value: '108'
-                    },
-                    'buzzer/0': {
-                        type: 'Buzzer',
-                        auxId: 'buzzer/0',
-                        value: true
-                    },
-                    'flame/0': {
-                        type: 'Flame',
-                        auxId: 'flame/0',
-                        value: false
-                    },
-                    'pir/0': {
-                        type: 'Pir',
-                        auxId: 'pir/0',
-                        value: true
-                    }
-                }
-            }
+        // register your req handler, cb(err, data);
+        var devs = {},
+            recs = qserver.list();
+
+        recs.forEach(function (rec) {
+            var dev = getDevInfo(rec.clientId);
+
+            if (!dev)
+                return;
+            devs[dev.permAddr] = dev;
+        });
+
+        setImmediate(function () {
+            cb(null, devs);
         });
     });
 
     ioServer.regReqHdlr('permitJoin', function (args, cb) { 
         // register your req handler
         // cb(err, data);
-        cb(null, null);
+        if (!isDemoRunning)
+            startDemoApp();
+
+        setImmediate(function () {
+            qserver.permitJoin(args.time);
+            cb(null, null);
+        });
     });
 
     ioServer.regReqHdlr('write', function (args, cb) { 
+        // args = { permAddr, auxId, value }
         // register your req handler
         // cb(err, data);
+
+        var permSplit = _.split(args.permAddr, '#'),
+            auxSplit = _.split(args.auxId, '/'),
+            mac = permSplit[0],
+            clientId = permSplit[1],
+            oid = auxSplit[0],
+            iid = auxSplit[1];
+
         cb(null, false);
     });
 
-/************************/
-/* Event handle         */
-/************************/
-/*** ready            ***/
-// readyInd();
+    /************************/
+    /* Event handle         */
+    /************************/
+    /*** ready            ***/
+    qserver.on('ready', function () {
+        readyInd();
+    });
 
-/*** permitJoining    ***/
-// permitJoiningInd(timeLeft);
+    /*** error            ***/
+    qserver.on('error', function (err) {
+        errorInd(err.message);
+    });
 
-/*** error            ***/
-// errorInd(msg);
+    /*** permitJoining    ***/
+    qserver.on('permitJoining', function (joinTimeLeft) {
+        permitJoiningInd(joinTimeLeft);
+    });
 
-/*** devIncoming      ***/
-// devIncomingInd(permAddr);
+    qserver.on('ind', function (msg) {
+        var permAddr = msg.qnode ? (msg.qnode.mac + '#' + msg.qnode.clientId) : '';
 
-/*** devStatus        ***/
-// devStatusInd(permAddr, status);
+        if (msg.type === 'devIncoming') {
+            /*** devIncoming      ***/
+            var devInfo = getDevInfo(msg.qnode.clientId)
+            devIncomingInd(devInfo);
+        } else if (msg.type === 'devStatus') {
+            /*** devStatus        ***/
+            devStatusInd(permAddr, msg.data);
+            if (msg.qnode.clientId === 'd01' && !isPolling)
+                startPolling(msg.qnode);
+        } else if (msg.type === 'devChange') {
+            // console.log('!!!!!!!!!!!!!!!!!!!!!1');
+            // console.log(msg.data);
+            /*** attrsChange      ***/
+            var data = msg.data;
+            var mainResource = mainResourceName(data.oid);
 
-/*** attrsChange      ***/
-// attrsChangeInd(permAddr, data);
-
-/************************/
-/* fake Indication      */
-/************************/
-    setInterval(function () {
-        devIncomingInd({
-            permAddr: 'AA:BB:CC:DD:EE',
-            status: 'online',
-            gads: { 
-                'temp/0': {
-                    type: 'Temperature',
-                    auxId: 'temp/0',
-                    value: '19'
-                },
-                'hum/0': {
-                    type: 'Humidity',
-                    auxId: 'hum/0',
-                    value: '56'
-                },
-                'light/0': {
-                    type: 'Light',
-                    auxId: 'light/0',
-                    value: true
-                },
-                'switch/0': {
-                    type: 'Switch',
-                    auxId: 'switch/0',
-                    value: true
-                } 
+            if (!data.rid) {
+                attrsChangeInd(permAddr, {
+                    type: getGadType(data.oid, (data.oid === 'dOut') ? 'flame' : undefined),  // make flame sensor
+                    auxId: data.oid + '/' + data.iid,
+                    value: data.data[mainResource]
+                });
+            } else {
+                attrsChangeInd(permAddr, {
+                    type: getGadType(data.oid, (data.oid === 'dOut') ? 'flame' : undefined),  // make flame sensor
+                    auxId: data.oid + '/' + data.iid,
+                    value: data.data
+                });
             }
-        });
-    }, 5000);
 
-    setInterval(function () {
-        attrsChangeInd('AA:BB:CC:DD:EE', {
-            type: 'Temperature',
-            auxId: 'temp/0',
-            value: '22'
-        });
-    }, 7000);
-
-    setInterval(function () {
-        toastInd('Test');
-    }, 8000);
-
-    setInterval(function () {
-        devStatusInd('AA:BB:CC:DD:EE', 'offline');
-    }, 15000);
-
+            // data = { type, auxId, value }
+        }
+    });
 };
-
-
 /**********************************/
 /* welcome function               */
 /**********************************/
 function showWelcomeMsg() {
-var blePart1 = chalk.blue('       ___   __    ____      ____ __ __ ____ ___   __ __ ____ ___   ___ '),
-    blePart2 = chalk.blue('      / _ ) / /   / __/____ / __// // // __// _ \\ / // // __// _ \\ / _ \\'),
-    blePart3 = chalk.blue('     / _  |/ /__ / _/ /___/_\\ \\ / _  // _/ / ___// _  // _/ / , _// // /'),
-    blePart4 = chalk.blue('    /____//____//___/     /___//_//_//___//_/   /_//_//___//_/|_|/____/ ');
-
-var zbPart1 = chalk.blue('      ____   ____ _____ ___   ____ ____        ____ __ __ ____ ___   __ __ ____ ___   ___ '),
-    zbPart2 = chalk.blue('     /_  /  /  _// ___// _ ) / __// __/ ____  / __// // // __// _ \\ / // // __// _ \\ / _ \\'),
-    zbPart3 = chalk.blue('      / /_ _/ / / (_ // _  |/ _/ / _/  /___/ _\\ \\ / _  // _/ / ___// _  // _/ / , _// // /'),
-    zbPart4 = chalk.blue('     /___//___/ \\___//____//___//___/       /___//_//_//___//_/   /_//_//___//_/|_|/____/');
-
-var mqttPart1 = chalk.blue('      __  ___ ____  ______ ______        ____ __ __ ____ ___   __ __ ____ ___   ___ '),
-    mqttPart2 = chalk.blue('     /  |/  // __ \\/_  __//_  __/ ____  / __// // // __// _ \\ / // // __// _ \\ / _ \\'),
-    mqttPart3 = chalk.blue('    / /|_/ // /_/ / / /    / /   /___/ _\\ \\ / _  // _/ / ___// _  // _/ / , _// // /'),
-    mqttPart4 = chalk.blue('   /_/  /_/ \\___\\_\\/_/    /_/         /___//_//_//___//_/   /_//_//___//_/|_|/____/ ');
-
-var coapPart1 = chalk.blue('     _____ ____   ___    ___          ____ __ __ ____ ___   __ __ ____ ___   ___ '),
-    coapPart2 = chalk.blue('    / ___// __ \\ / _ |  / _ \\  ____  / __// // // __// _ \\ / // // __// _ \\ / _ \\'),
-    coapPart3 = chalk.blue('   / /__ / /_/ // __ | / ___/ /___/ _\\ \\ / _  // _/ / ___// _  // _/ / , _// // /'),
-    coapPart4 = chalk.blue('   \\___/ \\____//_/ |_|/_/          /___//_//_//___//_/   /_//_//___//_/|_|/____/ ');
+    var mqttPart1 = chalk.blue('      __  ___ ____  ______ ______        ____ __ __ ____ ___   __ __ ____ ___   ___ '),
+        mqttPart2 = chalk.blue('     /  |/  // __ \\/_  __//_  __/ ____  / __// // // __// _ \\ / // // __// _ \\ / _ \\'),
+        mqttPart3 = chalk.blue('    / /|_/ // /_/ / / /    / /   /___/ _\\ \\ / _  // _/ / ___// _  // _/ / , _// // /'),
+        mqttPart4 = chalk.blue('   /_/  /_/ \\___\\_\\/_/    /_/         /___//_//_//___//_/   /_//_//___//_/|_|/____/ ');
 
     console.log('');
     console.log('');
-    console.log('Welcome to ble-shepherd webapp... ');
+    console.log('Welcome to mqtt-shepherd webapp... ');
     console.log('');
-    console.log(blePart1);
-    console.log(blePart2);
-    console.log(blePart3);
-    console.log(blePart4);
-    console.log(chalk.gray('         A network server and manager for the BLE machine network'));
+    console.log(mqttPart1);
+    console.log(mqttPart2);
+    console.log(mqttPart3);
+    console.log(mqttPart4);
+    console.log(chalk.gray('         A Lightweight MQTT Machine Network Server'));
     console.log('');
-    console.log('   >>> Author:     Hedy Wang (hedywings@gmail.com)');
-    console.log('   >>> Version:    ble-shepherd v1.0.0');
-    console.log('   >>> Document:   https://github.com/bluetoother/ble-shepherd');
-    console.log('   >>> Copyright (c) 2016 Hedy Wang, The MIT License (MIT)');
+    console.log('   >>> Author:     Simen Li (simenkid@gmail.com)');
+    console.log('   >>> Version:    mqtt-shepherd v0.2.8');
+    console.log('   >>> Document:   https://github.com/lwmqn/mqtt-shepherd');
+    console.log('   >>> Copyright (c) 2016 Simen Li, The MIT License (MIT)');
     console.log('');
     console.log('The server is up and running, press Ctrl+C to stop server.');
     console.log('');
@@ -205,7 +261,7 @@ function setLeaveMsg() {
         console.log(' ');
         console.log('    >>> This is a simple demonstration of how the shepherd works.');
         console.log('    >>> Please visit the link to know more about this project:   ');
-        console.log('    >>>   ' + chalk.yellow('https://github.com/zigbeer/zigbee-shepherd'));
+        console.log('    >>>   ' + chalk.yellow('https://github.com/lwmqn/mqtt-shepherd'));
         console.log(' ');
         process.exit();
     }
@@ -254,7 +310,68 @@ function attrsChangeInd (permAddr, gad) {
 
 function toastInd (msg) {
     ioServer.sendInd('toast', { msg: msg });
+}
 
+function getGadType(name, appType) {
+    if (name === 'dOut' && appType === 'flame')
+        return 'Flame';
+    else if (name == 'onOffSwitch')
+        return 'Switch';
+    else if (name === 'lightCtrl')
+        return 'Light';
+    else if (name === 'presence')
+        return 'Pir';
+    else
+        return _.upperFirst(name);
+}
+
+function getGadValue(qnode, name, iid) {
+    var val;
+
+    if (name === 'temperature' || name === 'humidity' || name === 'illuminance')
+        val = qnode.so.get(name, iid, 'sensorValue');
+    else if (name === 'buzzer' || name === 'lightCtrl')
+        val = qnode.so.get(name, iid, 'onOff');
+    else if (name === 'onOffSwitch' || name === 'presence')
+        val = qnode.so.get(name, iid, 'dInState');
+    else if (name === 'dOut')
+        val = qnode.so.get(name, iid, 'dOutState');
+
+    return val;
+}
+
+function mainResourceName(name) {
+    if (name === 'temperature' || name === 'humidity' || name === 'illuminance')
+        return 'sensorValue';
+    else if (name === 'buzzer' || name === 'lightCtrl')
+        return 'onOff';
+    else if (name === 'onOffSwitch' || name === 'presence')
+        return 'dInState';
+    else if (name === 'dOut')
+        return 'dOutState';
+}
+
+
+function startPolling(qnode) {
+    isPolling = true;
+        setInterval(function () {
+            qnode.readReq('temperature/0/sensorValue', function (err, rsp) {
+                // console.log('########################1');
+                // console.log(rsp);
+            });
+        }, 3000);
+        setInterval(function () {
+            qnode.readReq('humidity/0/sensorValue', function (err, rsp) {
+                // console.log('########################2');
+                // console.log(rsp);
+            });
+        }, 3000);
+        setInterval(function () {
+            qnode.readReq('illuminance/1/sensorValue', function (err, rsp) {
+                // console.log('########################3');
+                // console.log(rsp);
+            });
+        }, 3000);
 }
 
 module.exports = app;
