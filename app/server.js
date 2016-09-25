@@ -19,7 +19,10 @@ qserver.start(function (err) {
 });
 
 var isDemoRunning = false;
-var isPolling = false;
+var isD01Observed = false;
+var isD02Observed = false;
+var isD03Observed = false;
+var isD04Observed = false;
 
 var startDemoApp = function () {
     isDemoRunning = true;
@@ -29,55 +32,78 @@ var startDemoApp = function () {
         qnode4 = model.qnode4;
 
     setTimeout(function () {
-        toastInd('Device d01 will join the network');
-        setTimeout(function () {
-            qnode1.connect('mqtt://localhost', function () {});
-        }, 3000);
-    }, 100);
+        toastInd('Client device d01 will join: Temp. + Humidity + Illum. Sensors');
+    }, 1000);
 
     setTimeout(function () {
-        toastInd('Device d02 will join the network');
-        setTimeout(function () {
-            qnode2.connect('mqtt://localhost', function () {});
-        }, 3000);
-    }, 3500);
+        qnode1.connect('mqtt://localhost', function () {});
+    }, 3000);
 
     setTimeout(function () {
-        toastInd('Device d03 will join the network');
-        setTimeout(function () {
-            qnode3.connect('mqtt://localhost', function () {});
-        }, 3000);
+        toastInd('Client device d02 will join: On/Off Switch');
+    }, 4000);
+
+    setTimeout(function () {
+        qnode2.connect('mqtt://localhost', function () {});
     }, 6000);
 
     setTimeout(function () {
-        toastInd('Device d04 will join the network');
-        setTimeout(function () {
-            qnode4.connect('mqtt://localhost', function () {});
-        }, 3000);
+        toastInd('Client device d03 will join: Buzzer + Light Bulb');
     }, 7000);
 
     setTimeout(function () {
-        toastInd('You can click on a lamp or a buzzer');
-    }, 11000);
+        qnode3.connect('mqtt://localhost', function () {});
+    }, 9000);
 
     setTimeout(function () {
-        toastInd('User will turn on the light switch');
-
-    }, 17000);
-
-    setTimeout(function () {
-        toastInd('Illumination is less than 50 lux, light would be turned on');
-
-    }, 29000);
+        toastInd('Client device d04 will join: PIR + Flame Sensors');
+    }, 10000);
 
     setTimeout(function () {
-        toastInd('PIR sensed someone walking around, light would be turned on');
-
-    }, 41000);
+        qnode4.connect('mqtt://localhost', function () {});
+    }, 12000);
 
     setTimeout(function () {
-        toastInd('Flame sensor detect the presence of a flame or fire, buzzer would be turned on');
+        toastInd('Try clicking on the Buzzer and Light Bulb');
+    }, 13000);
+
+    setTimeout(function () {
+        toastInd('Someone light the Bulb up by the On/Off Switch');
+        qnode2.so.write('onOffSwitch', 0, 'dInState', 1, function (err, val) {});
+
+        setTimeout(function () {
+            qnode2.so.write('onOffSwitch', 0, 'dInState', 0, function (err, val) {});
+        }, 5000);
+    }, 22000);
+
+    setTimeout(function () {
+        toastInd('Auto light up when illumination < 50 lux');
+        qnode1.so.write('illuminance', 1, 'sensorValue', 40, function (err, val) {});
+    }, 32000);
+
+    setTimeout(function () {
+        toastInd('Auto light up when PIR sensed someone walking around');
+        qnode4.so.write('presence', 0, 'dInState', 1, function (err, val) {});
+
+        setTimeout(function () {
+            qnode4.so.write('presence', 0, 'dInState', 0, function (err, val) {});
+        }, 6000);
+    }, 40000);
+
+    setTimeout(function () {
+        toastInd('Buzzing on fire detected!!');
+
+        qnode4.so.write('dOut', 0, 'dOutState', 1, function (err, val) {});
+
+        setTimeout(function () {
+            qnode4.so.write('dOut', 0, 'dOutState', 0, function (err, val) {});
+        }, 6000);
     }, 53000);
+
+    setTimeout(function () {
+        toastInd('Demo Ended!');
+    }, 58000);
+
 };
 
 var validGads = [ 'temperature', 'humidity', 'illuminance', 'onOffSwitch', 'buzzer', 'lightCtrl', 'presence', 'dOut' ];
@@ -150,15 +176,28 @@ var app = function () {
         // args = { permAddr, auxId, value }
         // register your req handler
         // cb(err, data);
+        cb(null, false);
 
         var permSplit = _.split(args.permAddr, '#'),
             auxSplit = _.split(args.auxId, '/'),
             mac = permSplit[0],
             clientId = permSplit[1],
             oid = auxSplit[0],
-            iid = auxSplit[1];
-
-        cb(null, false);
+            iid = auxSplit[1],
+            rid = mainResourceName(oid);
+        var rscPath = oid + '/' + iid + '/' + rid;
+        var qnode = qserver.find(clientId);
+        
+        if (!qnode)
+            setImmediate(function () {
+                cb(new Error('Gadget not found.'));
+            });
+        else
+            qnode.writeReq(rscPath, args.value, function (err, rsp) {
+                // console.log(err);
+                // console.log(rsp);
+                cb(err, rsp ? rsp.data : undefined);
+            });
     });
 
     /************************/
@@ -189,11 +228,15 @@ var app = function () {
         } else if (msg.type === 'devStatus') {
             /*** devStatus        ***/
             devStatusInd(permAddr, msg.data);
-            if (msg.qnode.clientId === 'd01' && !isPolling)
-                startPolling(msg.qnode);
+            if (msg.qnode.clientId === 'd01' && !isD01Observed)
+                startObservingD01(msg.qnode);
+            else if (msg.qnode.clientId === 'd02' && !isD02Observed)
+                startObservingD02(msg.qnode);
+            else if (msg.qnode.clientId === 'd03' && !isD03Observed)
+                startObservingD03(msg.qnode);
+            else if (msg.qnode.clientId === 'd04' && !isD04Observed)
+                startObservingD04(msg.qnode);
         } else if (msg.type === 'devChange') {
-            // console.log('!!!!!!!!!!!!!!!!!!!!!1');
-            // console.log(msg.data);
             /*** attrsChange      ***/
             var data = msg.data;
             var mainResource = mainResourceName(data.oid);
@@ -212,6 +255,40 @@ var app = function () {
                 });
             }
 
+            //-- switch detection
+            if (msg.qnode.clientId === 'd02' && data.rid === 'dInState') {
+                var qnode = qserver.find('d03');
+                if (!qnode) return;
+                qnode.writeReq('lightCtrl/0/onOff', data.data, function (err, rsp) {
+                    // console.log(rsp);
+                });
+            }
+            //-- illum detection
+            if (msg.qnode.clientId === 'd01' && data.oid === 'illuminance' && parseInt(data.iid) === 1 && data.rid === 'sensorValue') {
+                var qnode = qserver.find('d03');
+                if (!qnode) return;
+                qnode.writeReq('lightCtrl/0/onOff', data.data < 50 ? 1 : 0, function (err, rsp) {
+                    // console.log(rsp);
+                });
+            }
+
+            //-- presence detection
+            if (msg.qnode.clientId === 'd04' && data.oid === 'presence' && parseInt(data.iid) === 0 && data.rid === 'dInState') {
+                var qnode = qserver.find('d03');
+                if (!qnode) return;
+                qnode.writeReq('lightCtrl/0/onOff', data.data, function (err, rsp) {
+                    // console.log(rsp);
+                });
+            }
+
+            //-- flame detection
+            if (msg.qnode.clientId === 'd04' && data.oid === 'dOut' && parseInt(data.iid) === 0 && data.rid === 'dOutState') {
+                var qnode = qserver.find('d03');
+                if (!qnode) return;
+                qnode.writeReq('buzzer/0/onOff', data.data, function (err, rsp) {
+                    // console.log(rsp);
+                });
+            }
             // data = { type, auxId, value }
         }
     });
@@ -351,27 +428,53 @@ function mainResourceName(name) {
         return 'dOutState';
 }
 
+function startObservingD01(qnode) {
+    isD01Observed = true;
+    setTimeout(function () {
+        qnode.writeAttrsReq('temperature/0/sensorValue', { pmin: 1, pmax: 60, stp: 0.1 }).then(function (rsp) {
+            return qnode.observeReq('temperature/0/sensorValue');
+        }).done();
 
-function startPolling(qnode) {
-    isPolling = true;
-        setInterval(function () {
-            qnode.readReq('temperature/0/sensorValue', function (err, rsp) {
-                // console.log('########################1');
-                // console.log(rsp);
-            });
-        }, 3000);
-        setInterval(function () {
-            qnode.readReq('humidity/0/sensorValue', function (err, rsp) {
-                // console.log('########################2');
-                // console.log(rsp);
-            });
-        }, 3000);
-        setInterval(function () {
-            qnode.readReq('illuminance/1/sensorValue', function (err, rsp) {
-                // console.log('########################3');
-                // console.log(rsp);
-            });
-        }, 3000);
+        qnode.writeAttrsReq('humidity/0/sensorValue', { pmin: 1, pmax: 60, stp: 0.1 }).then(function (rsp) {
+            return qnode.observeReq('humidity/0/sensorValue');
+        }).done();
+
+        qnode.writeAttrsReq('illuminance/1/sensorValue', { pmin: 1, pmax: 60, stp: 1 }).then(function (rsp) {
+            return qnode.observeReq('illuminance/1/sensorValue');
+        }).done();
+    }, 600);
 }
+
+function startObservingD02(qnode) {
+    isD02Observed = true;
+    setTimeout(function () {
+        qnode.writeAttrsReq('onOffSwitch/0/dInState', { pmin: 1, pmax: 60, stp: 0.1 }).then(function (rsp) {
+            return qnode.observeReq('onOffSwitch/0/dInState');
+        }).done();
+    }, 600);
+}
+
+function startObservingD03(qnode) {
+    isD03Observed = true;
+    setTimeout(function () {
+        qnode.writeAttrsReq('lightCtrl/0/onOff', { pmin: 1, pmax: 60, stp: 0.1 }).then(function (rsp) {
+            return qnode.observeReq('lightCtrl/0/onOff');
+        }).done();
+    }, 600);
+}
+
+function startObservingD04(qnode) {
+    isD04Observed = true;
+    setTimeout(function () {
+        qnode.writeAttrsReq('presence/0/dInState', { pmin: 1, pmax: 60, stp: 0.1 }).then(function (rsp) {
+            return qnode.observeReq('presence/0/dInState');
+        }).done();
+
+        qnode.writeAttrsReq('dOut/0/dOutState', { pmin: 1, pmax: 60, stp: 0.1 }).then(function (rsp) {
+            return qnode.observeReq('dOut/0/dOutState');
+        }).done();
+    }, 600);
+}
+
 
 module.exports = app;

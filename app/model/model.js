@@ -35,18 +35,16 @@ qnode4 = new MqttNode('d04', so4);
 qnode1.on('ready', function () {
     var so = qnode1.getSmartObject();
     setInterval(function () {
-        so.write('temperature', 0, 'sensorValue', randomFloat(18, 26), function (err, val) {
-            console.log('TEMP: ' + val);
-        });
+        so.write('temperature', 0, 'sensorValue', randomFloat(18, 26), function (err, val) {});
     }, 2800);
 
     setInterval(function () {
         so.write('humidity', 0, 'sensorValue', randomFloat(40, 70), function (err, val) {});
-    }, 3000);
+    }, 5000);
 
     setInterval(function () {
         so.write('illuminance', 1, 'sensorValue', randomInt(50, 1000), function (err, val) {});
-    }, 3200);
+    }, 8000);
 });
 
 qnode1.on('error', function (err) {
